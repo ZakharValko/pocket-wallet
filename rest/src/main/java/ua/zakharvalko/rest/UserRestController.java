@@ -12,18 +12,18 @@ import ua.zakharvalko.service.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/users/")
+@RequestMapping("/api/users")
 public class UserRestController {
 
     @Autowired
     private UserService userService;
 
     @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getById(@PathVariable("id") Integer userId) {
-        if(userId == null) {
+    public ResponseEntity<User> getById(@PathVariable("id") Integer id) {
+        if(id == null) {
             return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            User user = userService.getById(userId);
+            User user = userService.getById(id);
             if(user == null) {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {

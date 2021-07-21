@@ -12,7 +12,7 @@ import ua.zakharvalko.service.AccountService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/accounts/")
+@RequestMapping("/api/accounts")
 public class AccountRestController {
 
     @Autowired

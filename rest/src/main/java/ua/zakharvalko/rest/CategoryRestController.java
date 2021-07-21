@@ -12,7 +12,7 @@ import ua.zakharvalko.service.CategoryService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/categories/")
+@RequestMapping("/api/categories")
 public class CategoryRestController {
 
     @Autowired

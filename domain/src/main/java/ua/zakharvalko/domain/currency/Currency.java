@@ -18,7 +18,7 @@ public class Currency {
     private Integer id;
 
     @Column
-    private CurrenciesEnum title;
+    private String title;
 
     public Currency() {
     }

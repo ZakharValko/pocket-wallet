@@ -1,10 +1,10 @@
 package ua.zakharvalko.domain.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import ua.zakharvalko.domain.account.Account;
-import ua.zakharvalko.domain.operation.Operation;
 import ua.zakharvalko.domain.role.Role;
 
 import javax.persistence.*;
@@ -14,7 +14,6 @@ import java.util.List;
 @Table(name = "user")
 @Getter
 @Setter
-@ToString
 public class User {
 
     @Id
@@ -28,10 +27,12 @@ public class User {
     private String secondName;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Account> accounts;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id", referencedColumnName = "id")
+    @JsonBackReference
     private Role role;
 
     public User() {

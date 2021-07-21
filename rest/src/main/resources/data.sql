@@ -1,0 +1,16 @@
+INSERT INTO role VALUES (1, 'Admin');
+INSERT INTO role VALUES (2, 'User');
+INSERT INTO operation_type VALUES (1, 'Transfer');
+INSERT INTO operation_type VALUES (2, 'Income');
+INSERT INTO operation_type VALUES (3, 'Expense');
+INSERT INTO currency VALUES (1, 'USD');
+INSERT INTO currency VALUES (2, 'UAH');
+INSERT INTO group_of_categories VALUES (1, 'Food&Drinks');
+INSERT INTO group_of_categories VALUES (2, 'Shopping');
+INSERT INTO category VALUES (1, 'Groceries', 1);
+INSERT INTO category VALUES (2, 'Clothes&Shoes', 2);
+INSERT INTO user VALUES (1, 'Alex', 'Smith', 2);
+INSERT INTO user VALUES (2, 'John', 'Allen', 1);
+INSERT INTO account VALUES (1, 200.25, 24567234, 1, 1);
+INSERT INTO account VALUES (2, 300.50, 34124312, 2, 2);
+INSERT INTO account VALUES (3, 100.00, 43143431, 2, 1);

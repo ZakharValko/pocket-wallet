@@ -1,5 +1,6 @@
 package ua.zakharvalko.domain.group;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -23,6 +24,7 @@ public class GroupOfCategories {
     private String title;
 
     @OneToMany(mappedBy = "group", fetch = FetchType.LAZY)
+    @JsonBackReference
     private List<Category> categories;
 
     public GroupOfCategories() {

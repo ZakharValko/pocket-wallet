@@ -13,7 +13,7 @@ import ua.zakharvalko.service.OperationService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/operations/")
+@RequestMapping("/api/operations")
 public class OperationRestController {
 
     @Autowired

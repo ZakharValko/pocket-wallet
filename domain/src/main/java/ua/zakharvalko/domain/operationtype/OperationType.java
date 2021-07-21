@@ -18,7 +18,7 @@ public class OperationType {
     private Integer id;
 
     @Column
-    private OperationTypeEnum title;
+    private String title;
 
     public OperationType() {
     }

@@ -1,5 +1,6 @@
 package ua.zakharvalko.domain.role;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,9 +21,10 @@ public class Role {
     private Integer id;
 
     @Column
-    private RolesEnum title;
+    private String title;
 
     @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<User> users;
 
     public Role() {

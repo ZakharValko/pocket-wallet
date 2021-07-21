@@ -1,5 +1,8 @@
 package ua.zakharvalko.domain.account;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,7 +15,6 @@ import javax.persistence.*;
 @Table(name = "account")
 @Getter
 @Setter
-@ToString
 public class Account {
 
     @Id
@@ -27,12 +29,15 @@ public class Account {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonBackReference
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
+    @JsonBackReference
     private Currency currency;
 
     public Account() {
     }
+
 }
