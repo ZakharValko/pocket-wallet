@@ -18,10 +18,10 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getById(@PathVariable("id") Integer id) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> getUser(@PathVariable("id") Long id) {
         if(id == null) {
-            return  new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
             User user = userService.getById(id);
             if(user == null) {
@@ -32,7 +32,7 @@ public class UserRestController {
         }
     }
 
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<User> addUser(@RequestBody @Validated User user) {
         if(user == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -42,7 +42,7 @@ public class UserRestController {
         }
     }
 
-    @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<User> editUser (@RequestBody @Validated User user) {
         if(user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -52,8 +52,8 @@ public class UserRestController {
         }
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> deleteUser (@PathVariable("id") Integer id) {
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> deleteUser (@PathVariable("id") Long id) {
         User user = this.userService.getById(id);
         if(user == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -63,7 +63,7 @@ public class UserRestController {
         }
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> getAll() {
         List<User> users = this.userService.getAll();
         if(users.isEmpty()) {
@@ -72,5 +72,4 @@ public class UserRestController {
             return new ResponseEntity<>(users, HttpStatus.OK);
         }
     }
-
 }

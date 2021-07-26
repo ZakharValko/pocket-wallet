@@ -1,5 +1,6 @@
 package ua.zakharvalko.domain.role;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,8 +24,8 @@ public class Role {
     @Column
     private String title;
 
-    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "role", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "role-users")
     private List<User> users;
 
     public Role() {

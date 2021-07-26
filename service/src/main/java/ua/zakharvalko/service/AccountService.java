@@ -2,6 +2,7 @@ package ua.zakharvalko.service;
 
 import ua.zakharvalko.domain.account.Account;
 
+import java.util.Date;
 import java.util.List;
 
 public interface AccountService {
@@ -11,4 +12,5 @@ public interface AccountService {
     Account getById(Integer id);
     Account editAccount(Account account);
     List<Account> getAllAccounts();
+    Double getCurrentBalanceOnDate(Integer id, Date date);
 }

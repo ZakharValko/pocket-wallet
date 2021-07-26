@@ -18,7 +18,7 @@ public class CategoryRestController {
     @Autowired
     private CategoryService categoryService;
 
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Category> addCategory(@RequestBody @Validated Category category) {
         if(category == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -28,7 +28,7 @@ public class CategoryRestController {
         }
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Category> deleteCategory(@PathVariable Integer id) {
         Category category = this.categoryService.getById(id);
         if(category == null) {
@@ -39,7 +39,7 @@ public class CategoryRestController {
         }
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Category> getById(@PathVariable Integer id) {
         if(id == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -48,12 +48,12 @@ public class CategoryRestController {
             if(category == null){
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             } else {
-                return new ResponseEntity<>(HttpStatus.OK);
+                return new ResponseEntity<>(category,HttpStatus.OK);
             }
         }
     }
 
-    @RequestMapping(value = "", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Category> editCategory(@RequestBody @Validated Category category) {
         if(category == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -63,7 +63,7 @@ public class CategoryRestController {
         }
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Category>> getAllCategories(){
         List<Category> categories = this.categoryService.getAllCategories();
         if(categories.isEmpty()){

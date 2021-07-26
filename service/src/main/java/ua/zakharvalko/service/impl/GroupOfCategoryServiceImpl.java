@@ -1,5 +1,6 @@
 package ua.zakharvalko.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.zakharvalko.dao.GroupOfCategoryRepository;
 import ua.zakharvalko.domain.group.GroupOfCategories;
@@ -10,6 +11,7 @@ import java.util.List;
 @Service
 public class GroupOfCategoryServiceImpl implements GroupOfCategoryService {
 
+    @Autowired
     private GroupOfCategoryRepository categoryRepository;
 
     @Override

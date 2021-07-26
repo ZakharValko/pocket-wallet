@@ -1,6 +1,7 @@
 package ua.zakharvalko.domain.category;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -22,9 +23,8 @@ public class Category {
     @Column
     private String title;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "group_id", referencedColumnName = "id")
-    @JsonBackReference
     private GroupOfCategories group;
 
     public Category() {

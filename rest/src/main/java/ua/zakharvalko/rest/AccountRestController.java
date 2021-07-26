@@ -1,6 +1,7 @@
 package ua.zakharvalko.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +10,8 @@ import org.springframework.web.bind.annotation.*;
 import ua.zakharvalko.domain.account.Account;
 import ua.zakharvalko.service.AccountService;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -18,7 +21,7 @@ public class AccountRestController {
     @Autowired
     private AccountService accountService;
 
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> addAccount(@RequestBody @Validated Account account) {
         if(account == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -28,7 +31,7 @@ public class AccountRestController {
         }
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> deleteAccount(@PathVariable("id") Integer id) {
         Account account = this.accountService.getById(id);
         if(account == null) {
@@ -39,7 +42,7 @@ public class AccountRestController {
         }
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> getById(@PathVariable("id") Integer id) {
         if(id == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -53,7 +56,7 @@ public class AccountRestController {
         }
     }
 
-    @RequestMapping(value = "", method = RequestMethod.PUT)
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
     public ResponseEntity<Account> editAccount(@RequestBody @Validated Account account) {
         if(account == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -63,7 +66,7 @@ public class AccountRestController {
         }
     }
 
-    @RequestMapping(value = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Account>> getAll() {
         List<Account> accounts = this.accountService.getAllAccounts();
         if(accounts.isEmpty()) {
@@ -71,6 +74,23 @@ public class AccountRestController {
         } else {
             return new ResponseEntity<>(accounts, HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = "/get-balance-on-date", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Double> getCurrentBalanceOnDate (@RequestParam("id") Integer id,
+                                                           @RequestParam(value = "date", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date date) {
+
+        Date now = new Date();
+        if(id == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        if(date == null){
+            date = now;
+        }
+
+        Double balance = this.accountService.getCurrentBalanceOnDate(id, date);
+        return new ResponseEntity<>(balance, HttpStatus.OK);
     }
 
 }

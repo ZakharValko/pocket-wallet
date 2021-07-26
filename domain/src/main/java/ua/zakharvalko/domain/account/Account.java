@@ -1,15 +1,14 @@
 package ua.zakharvalko.domain.account;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 import ua.zakharvalko.domain.currency.Currency;
+import ua.zakharvalko.domain.operation.Operation;
 import ua.zakharvalko.domain.user.User;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "account")
@@ -29,13 +28,17 @@ public class Account {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @JsonBackReference
+    //@JsonManagedReference(value = "user-account")
     private User user;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
-    @JsonBackReference
+    //@JsonManagedReference(value = "currency-account")
     private Currency currency;
+
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "account-operation")
+    private List<Operation> operations;
 
     public Account() {
     }

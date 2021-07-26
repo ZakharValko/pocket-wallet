@@ -16,9 +16,9 @@ import java.util.List;
 public class GroupCategoryRestController {
 
     @Autowired
-    GroupOfCategoryService groupOfCategoryService;
+    private GroupOfCategoryService groupOfCategoryService;
 
-    @RequestMapping(value = "", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GroupOfCategories> addGroup(@RequestBody @Validated GroupOfCategories groupOfCategories){
         if(groupOfCategories == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -28,7 +28,7 @@ public class GroupCategoryRestController {
         }
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GroupOfCategories> deleteGroup(@PathVariable Integer id) {
         GroupOfCategories group = this.groupOfCategoryService.getById(id);
         if(group == null) {
@@ -39,7 +39,7 @@ public class GroupCategoryRestController {
         }
     }
 
-    @RequestMapping(value = "{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GroupOfCategories> getById(@PathVariable Integer id) {
         if(id == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -53,6 +53,7 @@ public class GroupCategoryRestController {
         }
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GroupOfCategories>> getAllGroups() {
         List<GroupOfCategories> groups = this.groupOfCategoryService.getAllGroups();
         if(groups.isEmpty()) {

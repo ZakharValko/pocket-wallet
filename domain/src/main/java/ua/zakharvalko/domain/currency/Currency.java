@@ -1,10 +1,15 @@
 package ua.zakharvalko.domain.currency;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import ua.zakharvalko.domain.account.Account;
+import ua.zakharvalko.domain.operation.Operation;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "currency")
@@ -19,6 +24,10 @@ public class Currency {
 
     @Column
     private String title;
+
+    @OneToMany(mappedBy = "currency", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference(value = "currency-account")
+    private List<Account> accounts;
 
     public Currency() {
     }

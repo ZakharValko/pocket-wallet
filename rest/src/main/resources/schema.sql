@@ -1,35 +1,35 @@
 CREATE DATABASE IF NOT EXISTS springbootdemo;
 USE springbootdemo;
 
-CREATE TABLE role
+CREATE TABLE IF NOT EXISTS role
 (
     id int NOT NULL AUTO_INCREMENT,
     title varchar(20) NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE operation_type
+CREATE TABLE IF NOT EXISTS operation_type
 (
     id int NOT NULL AUTO_INCREMENT,
     title varchar(20) NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE currency
+CREATE TABLE IF NOT EXISTS currency
 (
     id int NOT NULL AUTO_INCREMENT,
     title varchar(3) NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE group_of_categories
+CREATE TABLE IF NOT EXISTS group_of_categories
 (
     id int NOT NULL AUTO_INCREMENT,
     title varchar(20) NOT NULL,
     PRIMARY KEY (id)
 );
 
-CREATE TABLE category
+CREATE TABLE IF NOT EXISTS category
 (
     id int NOT NULL AUTO_INCREMENT,
     title varchar(20) NOT NULL,
@@ -38,9 +38,9 @@ CREATE TABLE category
     PRIMARY KEY (id)
 );
 
-CREATE TABLE user
+CREATE TABLE IF NOT EXISTS user
 (
-    id int NOT NULL AUTO_INCREMENT,
+    id bigint NOT NULL AUTO_INCREMENT,
     first_name varchar(20) NOT NULL,
     second_name varchar(20) NOT NULL,
     role_id int,
@@ -48,19 +48,19 @@ CREATE TABLE user
     PRIMARY KEY (id)
 );
 
-CREATE TABLE account
+CREATE TABLE IF NOT EXISTS account
 (
     id int NOT NULL AUTO_INCREMENT,
     number varchar(16) NOT NULL,
     balance double NOT NULL DEFAULT 0.00,
-    user_id int,
+    user_id bigint,
     currency_id int,
     foreign key (currency_id) references currency (id),
     foreign key (user_id) references user (id),
     PRIMARY KEY (id)
 );
 
-CREATE TABLE operation
+CREATE TABLE IF NOT EXISTS operation
 (
     id int NOT NULL AUTO_INCREMENT,
     description varchar(20),
