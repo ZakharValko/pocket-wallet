@@ -1,0 +1,98 @@
+package ua.zakharvalko.springbootdemo.rest;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ua.zakharvalko.springbootdemo.domain.Currency;
+import ua.zakharvalko.springbootdemo.service.CurrencyService;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@RunWith(SpringRunner.class)
+@WebMvcTest({CurrencyRestController.class})
+class CurrencyRestControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockBean
+    private CurrencyService currencyService;
+
+    @Test
+    void shouldAddCurrency() throws Exception {
+        Currency currency = Currency.builder().id(1).build();
+        when(currencyService.addCurrency(currency)).thenReturn(currency);
+        mockMvc.perform(
+                MockMvcRequestBuilders.post("/api/currencies/")
+                        .content(asJsonString(currency))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+        )
+                .andExpect(status().isCreated())
+                .andExpect(content().json("{}"));
+    }
+
+    @Test
+    void shouldDeleteCurrency() throws Exception {
+        Currency currency = Currency.builder().id(1).build();
+        when(currencyService.getById(1)).thenReturn(currency);
+        mockMvc.perform( MockMvcRequestBuilders.delete("/api/currencies/{id}", 1) )
+                .andExpect(status().isOk())
+                .andExpect(content().json("{}"));
+    }
+
+    @Test
+    void shouldReturnCurrencyById() throws Exception {
+        Currency currency = Currency.builder().id(1).build();
+        when(currencyService.getById(1)).thenReturn(currency);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/currencies/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{}"));
+    }
+
+    @Test
+    void shouldEditCurrency() throws Exception {
+        Currency oldCurrency = Currency.builder().id(1).title("USD").build();
+        Currency newCurrency = Currency.builder().id(1).title("US Dollars").build();
+        when(currencyService.editCurrency(oldCurrency)).thenReturn(newCurrency);
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/currencies/")
+                .content(asJsonString(newCurrency))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().json("{}, {}"));
+    }
+
+    @Test
+    void shouldReturnAllCurrencies() throws Exception {
+        List<Currency> currencies = Arrays.asList(
+                Currency.builder().id(1).build(),
+                Currency.builder().id(2).build()
+        );
+        when(currencyService.getAllCurrencies()).thenReturn(currencies);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/currencies/"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("[{}, {}]"));
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+}

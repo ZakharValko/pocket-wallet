@@ -13,10 +13,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>ua.zakharvalko</groupId>
-            <artifactId>domain</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
-            <scope>compile</scope>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>ua.zakharvalko</groupId>
