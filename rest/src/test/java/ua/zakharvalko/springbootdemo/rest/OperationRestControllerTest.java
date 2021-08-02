@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ua.zakharvalko.springbootdemo.domain.Operation;
 import ua.zakharvalko.springbootdemo.service.OperationService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -69,7 +70,10 @@ class OperationRestControllerTest {
 
     @Test
     void shouldReturnOperationsByFilter() throws Exception {
-        when(operationService.getOperationByFilter(1, 1, 1, 1, 1, new Date(100), new Date(200))).thenReturn(List.of(Operation.builder().build()));
+        Operation operation = Operation.builder().build();
+        List<Operation> operations = new ArrayList<>();
+        operations.add(operation);
+        when(operationService.getOperationByFilter(1, 1, 1, 1, 1, new Date(100), new Date(200))).thenReturn(operations);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/operations/get-operation-by-filter")
                 .param("account", "1")
                 .param("category", "1")

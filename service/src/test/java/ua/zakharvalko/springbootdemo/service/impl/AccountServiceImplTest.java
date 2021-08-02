@@ -95,7 +95,10 @@ class AccountServiceImplTest {
 
     @Test
     public void shouldReturnBalanceOnDate() {
-        Account account = new Account(1, 13473L, 100.00, User.builder().id(1).build(), Currency.builder().id(1).build(), List.of(new Operation(1, "description", new Date(5000), 50.00, OperationType.builder().id(1).build(), Category.builder().id(1).group(GroupOfCategories.builder().id(1).build()).build())));
+        Operation operation = new Operation(1, "description", new Date(5000), 50.00, OperationType.builder().id(1).build(), Category.builder().id(1).group(GroupOfCategories.builder().id(1).build()).build());
+        List<Operation> operations = new ArrayList<>();
+        operations.add(operation);
+        Account account = new Account(1, 13473L, 100.00, User.builder().id(1).build(), Currency.builder().id(1).build(), operations);
 
         when(accountRepository.getById(1)).thenReturn(account);
 
