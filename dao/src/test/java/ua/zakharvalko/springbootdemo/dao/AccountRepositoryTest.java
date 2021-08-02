@@ -19,12 +19,12 @@ class AccountRepositoryTest {
 
     @Test
     public void shouldSaveAccount() {
-        accountRepository.save(Account.builder().number(123213L).balance(0.00).build());
+        accountRepository.save(Account.builder().number("1212 1212 1212 1212").balance(0L).build());
     }
 
     @Test
     public void shouldDeleteAccount() {
-        Account account = Account.builder().number(123213L).balance(0.00).build();
+        Account account = Account.builder().number("1212 3223 1212 3232").balance(0L).build();
         accountRepository.saveAndFlush(account);
         accountRepository.deleteById(account.getId());
     }

@@ -13,6 +13,6 @@ public interface OperationService {
     Operation getById(Integer id);
     List<Operation> getAllOperations();
     List<Operation> getOperationByFilter(Integer account, Integer category, Integer group, Integer currency, Integer operationType, Date from, Date to);
-    Double getTotalExpensesByFilter(Integer account, Integer category, Integer group, Integer currency, Date from, Date to);
-    Double getCashFlow(Integer account, Date from, Date to);
+    Long getTotalExpensesByFilter(Integer account, Integer category, Integer group, Integer currency, Date from, Date to);
+    Long getCashFlow(Integer account, Date from, Date to);
 }

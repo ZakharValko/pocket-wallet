@@ -12,5 +12,5 @@ public interface AccountService {
     Account editAccount(Account account);
     Account getById(Integer id);
     List<Account> getAllAccounts();
-    Double getCurrentBalanceOnDate(Integer id, Date date);
+    Long getCurrentBalanceOnDate(Integer id, Date date);
 }

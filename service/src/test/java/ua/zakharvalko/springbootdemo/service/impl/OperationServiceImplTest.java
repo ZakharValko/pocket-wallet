@@ -40,7 +40,7 @@ class OperationServiceImplTest {
         Operation operation = Operation.builder().id(1)
                 .description("description")
                 .date(new Date(5000))
-                .price(200.00)
+                .price(200L)
                 .account(Account.builder().id(1).currency(Currency.builder().id(1).build()).build())
                 .operationType(OperationType.builder().id(1).build())
                 .category(Category.builder().id(1).group(GroupOfCategories.builder().id(1).build()).build())
@@ -64,8 +64,8 @@ class OperationServiceImplTest {
 
     @Test
     public void shouldEditOperation() {
-        Operation oldOperation = Operation.builder().id(1).price(100.00).build();
-        Operation newOperation = Operation.builder().id(1).price(150.00).build();
+        Operation oldOperation = Operation.builder().id(1).price(100L).build();
+        Operation newOperation = Operation.builder().id(1).price(150L).build();
 
         given(operationRepository.getById(oldOperation.getId())).willReturn(newOperation);
         operationService.editOperation(newOperation);
@@ -78,7 +78,7 @@ class OperationServiceImplTest {
         Operation operation = Operation.builder().id(1)
                 .description("description")
                 .date(new Date(5000))
-                .price(200.00)
+                .price(200L)
                 .account(Account.builder().id(1).currency(Currency.builder().id(1).build()).build())
                 .operationType(OperationType.builder().id(1).build())
                 .category(Category.builder().id(1).group(GroupOfCategories.builder().id(1).build()).build())
@@ -108,7 +108,7 @@ class OperationServiceImplTest {
         Operation first = Operation.builder().id(1)
                 .description("description")
                 .date(new Date(5000))
-                .price(200.00)
+                .price(200L)
                 .account(Account.builder().id(1).currency(Currency.builder().id(1).build()).build())
                 .operationType(OperationType.builder().id(1).build())
                 .category(Category.builder().id(1).group(GroupOfCategories.builder().id(1).build()).build())
@@ -117,7 +117,7 @@ class OperationServiceImplTest {
         Operation second = Operation.builder().id(2)
                 .description("description")
                 .date(new Date(10000))
-                .price(100.00)
+                .price(100L)
                 .account(Account.builder().id(2).currency(Currency.builder().id(2).build()).build())
                 .operationType(OperationType.builder().id(2).build())
                 .category(Category.builder().id(2).group(GroupOfCategories.builder().id(2).build()).build())
@@ -137,7 +137,7 @@ class OperationServiceImplTest {
         Operation first = Operation.builder().id(1)
                 .description("description")
                 .date(new Date(5000))
-                .price(200.00)
+                .price(200L)
                 .account(Account.builder().id(1).currency(Currency.builder().id(1).build()).build())
                 .operationType(OperationType.builder().id(1).build())
                 .category(Category.builder().id(1).group(GroupOfCategories.builder().id(1).build()).build())
@@ -146,14 +146,14 @@ class OperationServiceImplTest {
         Operation second = Operation.builder().id(2)
                 .description("description")
                 .date(new Date(10000))
-                .price(100.00)
+                .price(100L)
                 .account(Account.builder().id(1).currency(Currency.builder().id(2).build()).build())
                 .operationType(OperationType.builder().id(3).build())
                 .category(Category.builder().id(2).group(GroupOfCategories.builder().id(2).build()).build())
                 .build();
 
         when(operationRepository.findAll()).thenReturn(Arrays.asList(first, second));
-        Double actual = operationService.getTotalExpensesByFilter(1, 2, 2, 2, new Date(6000), new Date(11000));
+        Long actual = operationService.getTotalExpensesByFilter(1, 2, 2, 2, new Date(6000), new Date(11000));
 
         assertEquals(100, actual);
         verify(operationRepository).findAll();
@@ -164,7 +164,7 @@ class OperationServiceImplTest {
         Operation first = Operation.builder().id(1)
                 .description("description")
                 .date(new Date(5000))
-                .price(100.00)
+                .price(100L)
                 .account(Account.builder().id(1).currency(Currency.builder().id(1).build()).build())
                 .operationType(OperationType.builder().id(1).build())
                 .category(Category.builder().id(1).group(GroupOfCategories.builder().id(1).build()).build())
@@ -173,7 +173,7 @@ class OperationServiceImplTest {
         Operation second = Operation.builder().id(2)
                 .description("description")
                 .date(new Date(10000))
-                .price(300.00)
+                .price(300L)
                 .account(Account.builder().id(1).currency(Currency.builder().id(2).build()).build())
                 .operationType(OperationType.builder().id(2).build())
                 .category(Category.builder().id(2).group(GroupOfCategories.builder().id(2).build()).build())
@@ -182,14 +182,14 @@ class OperationServiceImplTest {
         Operation third = Operation.builder().id(3)
                 .description("description")
                 .date(new Date(12000))
-                .price(300.00)
+                .price(300L)
                 .account(Account.builder().id(1).currency(Currency.builder().id(2).build()).build())
                 .operationType(OperationType.builder().id(2).build())
                 .category(Category.builder().id(2).group(GroupOfCategories.builder().id(2).build()).build())
                 .build();
 
         when(operationRepository.findAll()).thenReturn(Arrays.asList(first, second, third));
-        Double actual = operationService.getCashFlow(1, new Date(4000), new Date(11000));
+        Long actual = operationService.getCashFlow(1, new Date(4000), new Date(11000));
 
         assertEquals(200, actual);
         verify(operationRepository).findAll();

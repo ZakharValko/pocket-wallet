@@ -19,10 +19,10 @@ public class Account {
     private Integer id;
 
     @Column
-    private Long number;
+    private String number;
 
     @Column
-    private Double balance;
+    private Long balance;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", referencedColumnName = "id")

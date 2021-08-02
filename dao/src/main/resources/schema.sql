@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS category
 
 CREATE TABLE IF NOT EXISTS user
 (
-    id bigint NOT NULL AUTO_INCREMENT,
+    id int NOT NULL AUTO_INCREMENT,
     first_name varchar(20) NOT NULL,
     second_name varchar(20) NOT NULL,
     role_id int,
@@ -51,9 +51,9 @@ CREATE TABLE IF NOT EXISTS user
 CREATE TABLE IF NOT EXISTS account
 (
     id int NOT NULL AUTO_INCREMENT,
-    number varchar(16) NOT NULL,
-    balance double NOT NULL DEFAULT 0.00,
-    user_id bigint,
+    number varchar(19) NOT NULL,
+    balance bigint NOT NULL DEFAULT 0.00,
+    user_id int,
     currency_id int,
     foreign key (currency_id) references currency (id),
     foreign key (user_id) references user (id),
@@ -63,9 +63,9 @@ CREATE TABLE IF NOT EXISTS account
 CREATE TABLE IF NOT EXISTS operation
 (
     id int NOT NULL AUTO_INCREMENT,
-    description varchar(20),
+    description varchar(100),
     date DATETIME NOT NULL,
-    price double NOT NULL,
+    price bigint NOT NULL,
     operation_type_id int,
     category_id int,
     account_id int,

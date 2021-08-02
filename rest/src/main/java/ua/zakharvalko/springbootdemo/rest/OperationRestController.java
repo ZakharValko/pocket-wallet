@@ -90,7 +90,7 @@ public class OperationRestController {
     }
 
     @RequestMapping(value = "/get-total-by-filter", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Double> getTotalExpensesByFilter(@RequestParam(value = "account") Integer account,
+    public ResponseEntity<Long> getTotalExpensesByFilter(@RequestParam(value = "account") Integer account,
                                                    @RequestParam(value = "category", required = false) Integer category,
                                                    @RequestParam(value = "group", required = false) Integer group,
                                                    @RequestParam(value = "currency", required = false) Integer currency,
@@ -100,19 +100,19 @@ public class OperationRestController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Double total = this.operationService.getTotalExpensesByFilter(account, category, group, currency, from, to);
+        Long total = this.operationService.getTotalExpensesByFilter(account, category, group, currency, from, to);
         return new ResponseEntity<>(total, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/get-cashflow", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Double> getCashFlow(@RequestParam(value = "account") Integer account,
+    public ResponseEntity<Long> getCashFlow(@RequestParam(value = "account") Integer account,
                                               @RequestParam(value = "from") @DateTimeFormat(pattern="yyyy-MM-dd") Date from,
                                               @RequestParam(value = "to") @DateTimeFormat(pattern="yyyy-MM-dd") Date to) {
         if(account == null || from == null || to == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Double cashFlow = this.operationService.getCashFlow(account, from, to);
+        Long cashFlow = this.operationService.getCashFlow(account, from, to);
         return new ResponseEntity<>(cashFlow, HttpStatus.OK);
     }
 }

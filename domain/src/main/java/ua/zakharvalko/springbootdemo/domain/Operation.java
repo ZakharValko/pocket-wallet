@@ -28,7 +28,7 @@ public class Operation {
     private Date date;
 
     @Column
-    private Double price;
+    private Long price;
 
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "id")
@@ -45,7 +45,7 @@ public class Operation {
     public Operation() {
     }
 
-    public Operation(Integer id, String description, Date date, Double price, OperationType operationType, Category category) {
+    public Operation(Integer id, String description, Date date, Long price, OperationType operationType, Category category) {
         this.id = id;
         this.description = description;
         this.date = date;

@@ -57,10 +57,10 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public Double getTotalExpensesByFilter(Integer account, Integer category, Integer group, Integer currency, Date from, Date to) {
+    public Long getTotalExpensesByFilter(Integer account, Integer category, Integer group, Integer currency, Date from, Date to) {
         List<Operation> allOperations = this.operationRepository.findAll();
 
-        List<Double> allExpenses = allOperations.stream()
+        List<Long> allExpenses = allOperations.stream()
                 .filter(o -> (account.equals(o.getAccount().getId()))
                         && (o.getOperationType().getId().equals(3) || o.getOperationType().getId().equals(1))
                         && (null == category || category.equals(o.getCategory().getId()))
@@ -72,30 +72,30 @@ public class OperationServiceImpl implements OperationService {
                 .collect(Collectors.toList());
 
         return allExpenses.stream()
-                .mapToDouble(o -> o)
+                .mapToLong(o -> o)
                 .sum();
     }
 
     @Override
-    public Double getCashFlow(Integer account, Date from, Date to) {
+    public Long getCashFlow(Integer account, Date from, Date to) {
         List<Operation> allOperations = this.operationRepository.findAll();
 
-        Double outcome = allOperations.stream()
+        Long outcome = allOperations.stream()
                 .filter(o -> (account.equals(o.getAccount().getId()))
                         && (o.getOperationType().getId().equals(1) || o.getOperationType().getId().equals(3))
                         && (o.getDate().after(from))
                         && (o.getDate().before(to)))
                 .map(Operation::getPrice)
-                .mapToDouble(o -> o)
+                .mapToLong(o -> o)
                 .sum();
 
-        Double income = allOperations.stream()
+        Long income = allOperations.stream()
                 .filter(o -> (account.equals(o.getAccount().getId()))
                         && (o.getOperationType().getId().equals(2))
                         && (o.getDate().after(from))
                         && (o.getDate().before(to)))
                 .map(Operation::getPrice)
-                .mapToDouble(o -> o)
+                .mapToLong(o -> o)
                 .sum();
 
         return income - outcome;

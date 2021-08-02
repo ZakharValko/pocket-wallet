@@ -116,7 +116,7 @@ class OperationRestControllerTest {
 
     @Test
     void shouldReturnTotalExpensesByFilter() throws Exception {
-        when(operationService.getTotalExpensesByFilter(1, 1, 1, 1, new Date(5000), new Date(6000))).thenReturn(500.00);
+        when(operationService.getTotalExpensesByFilter(1, 1, 1, 1, new Date(5000), new Date(6000))).thenReturn(500L);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/operations/get-total-by-filter")
                 .param("account", "1")
                 .param("category", "1")
@@ -131,7 +131,7 @@ class OperationRestControllerTest {
 
     @Test
     void shouldReturnCashFlow() throws Exception {
-        when(operationService.getCashFlow(1, new Date(5000), new Date(6000))).thenReturn(500.00);
+        when(operationService.getCashFlow(1, new Date(5000), new Date(6000))).thenReturn(500L);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/operations/get-cashflow")
                 .param("account", "1")
                 .param("from", "2021-01-01")

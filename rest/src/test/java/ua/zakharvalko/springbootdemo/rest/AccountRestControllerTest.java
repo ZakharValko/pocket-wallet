@@ -62,8 +62,8 @@ class AccountRestControllerTest {
 
     @Test
     void shouldEditAccount() throws Exception {
-        Account oldAccount = Account.builder().id(1).balance(100.00).build();
-        Account newAccount = Account.builder().id(1).balance(150.00).build();
+        Account oldAccount = Account.builder().id(1).balance(100L).build();
+        Account newAccount = Account.builder().id(1).balance(150L).build();
         when(accountService.editAccount(oldAccount)).thenReturn(newAccount);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/accounts/")
                 .content(asJsonString(newAccount))
@@ -98,7 +98,7 @@ class AccountRestControllerTest {
 
     @Test
     void getCurrentBalanceOnDate() throws Exception {
-        when(accountService.getCurrentBalanceOnDate(1, new Date())).thenReturn(0.0);
+        when(accountService.getCurrentBalanceOnDate(1, new Date())).thenReturn(0L);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/accounts/get-balance-on-date").param("id", "1").param("date", "1970-01-01"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("0.0"));
