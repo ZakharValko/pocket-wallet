@@ -73,7 +73,7 @@ public class OperationServiceImpl implements OperationService {
 
         return allExpenses.stream()
                 .mapToLong(o -> o)
-                .sum();
+                .sum()/100;
     }
 
     @Override
@@ -98,6 +98,6 @@ public class OperationServiceImpl implements OperationService {
                 .mapToLong(o -> o)
                 .sum();
 
-        return income - outcome;
+        return (income - outcome)/100;
     }
 }

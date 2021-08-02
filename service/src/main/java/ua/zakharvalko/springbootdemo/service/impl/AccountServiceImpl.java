@@ -69,6 +69,6 @@ public class AccountServiceImpl implements AccountService{
                 balance -= price;
             }
         }
-        return balance;
+        return balance/100;
     }
 }
