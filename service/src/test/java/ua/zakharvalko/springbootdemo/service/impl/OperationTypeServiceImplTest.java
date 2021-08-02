@@ -50,17 +50,6 @@ class OperationTypeServiceImplTest {
     }
 
     @Test
-    void shouldReturnTypeById() {
-        OperationType type = OperationType.builder().id(1).build();
-        when(operationTypeRepository.getById(1)).thenReturn(type);
-
-        OperationType actual = operationTypeService.getById(1);
-
-        assertEquals(type.getId(), actual.getId());
-        verify(operationTypeRepository).getById(1);
-    }
-
-    @Test
     void shouldEditType() {
         OperationType oldType = OperationType.builder().id(1).build();
         oldType.setTitle("Old");
@@ -71,6 +60,17 @@ class OperationTypeServiceImplTest {
         operationTypeService.editOperationType(newType);
 
         verify(operationTypeRepository).saveAndFlush(newType);
+    }
+
+    @Test
+    void shouldReturnTypeById() {
+        OperationType type = OperationType.builder().id(1).build();
+        when(operationTypeRepository.getById(1)).thenReturn(type);
+
+        OperationType actual = operationTypeService.getById(1);
+
+        assertEquals(type.getId(), actual.getId());
+        verify(operationTypeRepository).getById(1);
     }
 
     @Test

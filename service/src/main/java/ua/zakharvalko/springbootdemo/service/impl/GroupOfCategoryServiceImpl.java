@@ -25,13 +25,13 @@ public class GroupOfCategoryServiceImpl implements GroupOfCategoryService {
     }
 
     @Override
-    public GroupOfCategories getById(Integer id) {
-        return groupRepository.getById(id);
+    public GroupOfCategories editGroup(GroupOfCategories group) {
+        return groupRepository.saveAndFlush(group);
     }
 
     @Override
-    public GroupOfCategories editGroup(GroupOfCategories group) {
-        return groupRepository.saveAndFlush(group);
+    public GroupOfCategories getById(Integer id) {
+        return groupRepository.getById(id);
     }
 
     @Override

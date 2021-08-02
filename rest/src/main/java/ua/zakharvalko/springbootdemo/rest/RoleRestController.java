@@ -40,6 +40,16 @@ public class RoleRestController {
         }
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    public ResponseEntity<Role> editRole(@RequestBody @Validated Role role) {
+        if(role == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            this.roleService.editRole(role);
+            return new ResponseEntity<>(role, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Role> getById(@PathVariable("id") Integer id) {
         if(id == null){
@@ -53,16 +63,6 @@ public class RoleRestController {
             }
         }
 
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<Role> editRole(@RequestBody @Validated Role role) {
-        if(role == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            this.roleService.editRole(role);
-            return new ResponseEntity<>(role, HttpStatus.OK);
-        }
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)

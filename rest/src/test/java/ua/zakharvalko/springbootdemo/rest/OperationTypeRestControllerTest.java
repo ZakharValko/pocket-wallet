@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
 import ua.zakharvalko.springbootdemo.domain.OperationType;
 import ua.zakharvalko.springbootdemo.service.OperationTypeService;
 
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest({OperationTypeRestController.class})
+@ContextConfiguration(classes = SpringBootDemoApplication.class)
 class OperationTypeRestControllerTest {
 
     @Autowired
@@ -54,15 +57,6 @@ class OperationTypeRestControllerTest {
     }
 
     @Test
-    void shouldReturnTypeById() throws Exception {
-        OperationType type = OperationType.builder().id(1).build();
-        when(typeService.getById(1)).thenReturn(type);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/operation-types/{id}", 1))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{}"));
-    }
-
-    @Test
     void shouldEditType() throws Exception {
         OperationType oldType = OperationType.builder().id(1).title("Old").build();
         OperationType newType = OperationType.builder().id(1).title("New").build();
@@ -74,6 +68,15 @@ class OperationTypeRestControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
+    }
+
+    @Test
+    void shouldReturnTypeById() throws Exception {
+        OperationType type = OperationType.builder().id(1).build();
+        when(typeService.getById(1)).thenReturn(type);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/operation-types/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{}"));
     }
 
     @Test

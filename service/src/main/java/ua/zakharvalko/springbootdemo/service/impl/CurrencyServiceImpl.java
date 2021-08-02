@@ -25,13 +25,13 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public Currency getById(Integer id) {
-        return currencyRepository.getById(id);
+    public Currency editCurrency(Currency currency) {
+        return currencyRepository.saveAndFlush(currency);
     }
 
     @Override
-    public Currency editCurrency(Currency currency) {
-        return currencyRepository.saveAndFlush(currency);
+    public Currency getById(Integer id) {
+        return currencyRepository.getById(id);
     }
 
     @Override

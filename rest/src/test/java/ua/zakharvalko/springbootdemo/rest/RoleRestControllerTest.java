@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
 import ua.zakharvalko.springbootdemo.domain.Role;
 import ua.zakharvalko.springbootdemo.service.RoleService;
 
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest({RoleRestController.class})
+@ContextConfiguration(classes = SpringBootDemoApplication.class)
 class RoleRestControllerTest {
 
     @Autowired
@@ -54,15 +57,6 @@ class RoleRestControllerTest {
     }
 
     @Test
-    void shouldReturnRoleById() throws Exception {
-        Role role = Role.builder().id(1).build();
-        when(roleService.getById(1)).thenReturn(role);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/roles/{id}", 1))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{}"));
-    }
-
-    @Test
     void shouldEditRole() throws Exception {
         Role oldRole = Role.builder().id(1).title("Old").build();
         Role newRole= Role.builder().id(1).title("New").build();
@@ -74,6 +68,15 @@ class RoleRestControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
+    }
+
+    @Test
+    void shouldReturnRoleById() throws Exception {
+        Role role = Role.builder().id(1).build();
+        when(roleService.getById(1)).thenReturn(role);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/roles/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{}"));
     }
 
     @Test

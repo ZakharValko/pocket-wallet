@@ -25,17 +25,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getById(Integer id) {
-        return userRepository.getById(id);
-    }
-
-    @Override
     public User editUser(User user) {
         return userRepository.saveAndFlush(user);
     }
 
     @Override
-    public List<User> getAll() {
+    public User getById(Integer id) {
+        return userRepository.getById(id);
+    }
+
+    @Override
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 }

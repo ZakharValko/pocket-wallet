@@ -8,8 +8,8 @@ public interface CurrencyService {
 
     Currency addCurrency(Currency currency);
     void deleteCurrency(Integer id);
-    Currency getById(Integer id);
     Currency editCurrency(Currency currency);
+    Currency getById(Integer id);
     List<Currency> getAllCurrencies();
 
 }

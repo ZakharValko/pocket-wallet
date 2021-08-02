@@ -9,8 +9,8 @@ public interface AccountService {
 
     Account addAccount(Account account);
     void deleteAccount(Integer id);
-    Account getById(Integer id);
     Account editAccount(Account account);
+    Account getById(Integer id);
     List<Account> getAllAccounts();
     Double getCurrentBalanceOnDate(Integer id, Date date);
 }

@@ -25,13 +25,13 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public Category getById(Integer id) {
-        return categoryRepository.getById(id);
+    public Category editCategory(Category category) {
+        return categoryRepository.saveAndFlush(category);
     }
 
     @Override
-    public Category editCategory(Category category) {
-        return categoryRepository.saveAndFlush(category);
+    public Category getById(Integer id) {
+        return categoryRepository.getById(id);
     }
 
     @Override

@@ -5,11 +5,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.BootstrapWith;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
 import ua.zakharvalko.springbootdemo.domain.Account;
 import ua.zakharvalko.springbootdemo.service.AccountService;
 
@@ -23,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest({AccountRestController.class})
+@ContextConfiguration(classes = SpringBootDemoApplication.class)
 class AccountRestControllerTest {
 
     @Autowired
@@ -56,15 +61,6 @@ class AccountRestControllerTest {
     }
 
     @Test
-    void shouldReturnAccountById() throws Exception {
-        Account account = Account.builder().id(1).build();
-        when(accountService.getById(1)).thenReturn(account);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/accounts/{id}", 1))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{}"));
-    }
-
-    @Test
     void shouldEditAccount() throws Exception {
         Account oldAccount = Account.builder().id(1).balance(100.00).build();
         Account newAccount = Account.builder().id(1).balance(150.00).build();
@@ -76,6 +72,15 @@ class AccountRestControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
+    }
+
+    @Test
+    void shouldReturnAccountById() throws Exception {
+        Account account = Account.builder().id(1).build();
+        when(accountService.getById(1)).thenReturn(account);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/accounts/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{}"));
     }
 
     @Test

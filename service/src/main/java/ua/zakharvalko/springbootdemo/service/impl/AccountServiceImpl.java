@@ -28,13 +28,13 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public Account getById(Integer id) {
-        return accountRepository.getById(id);
+    public Account editAccount(Account account) {
+        return accountRepository.saveAndFlush(account);
     }
 
     @Override
-    public Account editAccount(Account account) {
-        return accountRepository.saveAndFlush(account);
+    public Account getById(Integer id) {
+        return accountRepository.getById(id);
     }
 
     @Override

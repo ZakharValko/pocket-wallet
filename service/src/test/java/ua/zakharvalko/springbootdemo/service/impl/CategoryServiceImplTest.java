@@ -50,17 +50,6 @@ class CategoryServiceImplTest {
     }
 
     @Test
-    public void shouldReturnCategoryById() {
-        Category category = Category.builder().id(1).build();
-        when(categoryRepository.getById(1)).thenReturn(category);
-
-        Category actual = categoryService.getById(1);
-
-        assertEquals(category.getId(), actual.getId());
-        verify(categoryRepository).getById(1);
-    }
-
-    @Test
     public void shouldEditCategory() {
         Category oldCategory = Category.builder().id(1).build();
         oldCategory.setTitle("Old");
@@ -71,6 +60,17 @@ class CategoryServiceImplTest {
         categoryService.editCategory(newCategory);
 
         verify(categoryRepository).saveAndFlush(newCategory);
+    }
+
+    @Test
+    public void shouldReturnCategoryById() {
+        Category category = Category.builder().id(1).build();
+        when(categoryRepository.getById(1)).thenReturn(category);
+
+        Category actual = categoryService.getById(1);
+
+        assertEquals(category.getId(), actual.getId());
+        verify(categoryRepository).getById(1);
     }
 
     @Test

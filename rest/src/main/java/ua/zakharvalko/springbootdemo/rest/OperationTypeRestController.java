@@ -19,7 +19,7 @@ public class OperationTypeRestController {
     private OperationTypeService operationTypeService;
 
     @RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<OperationType> addType(@RequestBody @Validated OperationType type) {
+    public ResponseEntity<OperationType> addOperationType(@RequestBody @Validated OperationType type) {
         if(type == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
@@ -39,6 +39,16 @@ public class OperationTypeRestController {
         }
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    public ResponseEntity<OperationType> editOperationType(@RequestBody @Validated OperationType type) {
+        if(type == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            this.operationTypeService.editOperationType(type);
+            return new ResponseEntity<>(type, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OperationType> getById(@PathVariable("id") Integer id) {
         if(id == null){
@@ -50,16 +60,6 @@ public class OperationTypeRestController {
             } else {
                 return new ResponseEntity<>(type, HttpStatus.OK);
             }
-        }
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<OperationType> editOperationType(@RequestBody @Validated OperationType type) {
-        if(type == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            this.operationTypeService.editOperationType(type);
-            return new ResponseEntity<>(type, HttpStatus.OK);
         }
     }
 

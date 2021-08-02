@@ -58,17 +58,6 @@ class AccountServiceImplTest {
     }
 
     @Test
-    public void shouldReturnAccountById() {
-        Account account = Account.builder().id(1).build();
-        when(accountRepository.getById(1)).thenReturn(account);
-
-        Account actual = accountService.getById(1);
-
-        assertEquals(account.getId(), actual.getId());
-        verify(accountRepository).getById(1);
-    }
-
-    @Test
     public void shouldEditAccount() {
         Account oldAccount = Account.builder().id(1).build();
         oldAccount.setBalance(150.00);
@@ -79,6 +68,17 @@ class AccountServiceImplTest {
         accountService.editAccount(newAccount);
 
         verify(accountRepository).saveAndFlush(newAccount);
+    }
+
+    @Test
+    public void shouldReturnAccountById() {
+        Account account = Account.builder().id(1).build();
+        when(accountRepository.getById(1)).thenReturn(account);
+
+        Account actual = accountService.getById(1);
+
+        assertEquals(account.getId(), actual.getId());
+        verify(accountRepository).getById(1);
     }
 
     @Test

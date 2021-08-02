@@ -39,8 +39,18 @@ public class UserRestController {
         }
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<User> editUser (@RequestBody @Validated User user) {
+        if(user == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            this.userService.editUser(user);
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> getUserById(@PathVariable("id") Integer id) {
+    public ResponseEntity<User> getById(@PathVariable("id") Integer id) {
         if(id == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
@@ -53,21 +63,11 @@ public class UserRestController {
         }
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> editUser (@RequestBody @Validated User user) {
-        if(user == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            this.userService.editUser(user);
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        }
-    }
-
 
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getAll() {
-        List<User> users = this.userService.getAll();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = this.userService.getAllUsers();
         if(users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

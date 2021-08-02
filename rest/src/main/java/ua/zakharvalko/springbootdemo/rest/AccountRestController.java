@@ -41,6 +41,16 @@ public class AccountRestController {
         }
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    public ResponseEntity<Account> editAccount(@RequestBody @Validated Account account) {
+        if(account == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            this.accountService.editAccount(account);
+            return new ResponseEntity<>(account, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> getById(@PathVariable("id") Integer id) {
         if(id == null){
@@ -52,16 +62,6 @@ public class AccountRestController {
             } else {
                 return new ResponseEntity<>(account, HttpStatus.OK);
             }
-        }
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<Account> editAccount(@RequestBody @Validated Account account) {
-        if(account == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            this.accountService.editAccount(account);
-            return new ResponseEntity<>(account, HttpStatus.OK);
         }
     }
 

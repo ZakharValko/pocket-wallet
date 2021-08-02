@@ -39,6 +39,16 @@ public class CurrencyRestController {
         }
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    public ResponseEntity<Currency> editCurrency(@RequestBody @Validated Currency currency) {
+        if(currency == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            this.currencyService.editCurrency(currency);
+            return new ResponseEntity<>(currency, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Currency> getById(@PathVariable("id") Integer id) {
         if(id == null){
@@ -50,16 +60,6 @@ public class CurrencyRestController {
             } else {
                 return new ResponseEntity<>(currency, HttpStatus.OK);
             }
-        }
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
-    public ResponseEntity<Currency> editCurrency(@RequestBody @Validated Currency currency) {
-        if(currency == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            this.currencyService.editCurrency(currency);
-            return new ResponseEntity<>(currency, HttpStatus.OK);
         }
     }
 

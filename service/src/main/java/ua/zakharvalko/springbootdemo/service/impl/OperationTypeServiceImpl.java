@@ -25,13 +25,13 @@ public class OperationTypeServiceImpl implements OperationTypeService{
     }
 
     @Override
-    public OperationType getById(Integer id) {
-        return operationTypeRepository.getById(id);
+    public OperationType editOperationType(OperationType type) {
+        return operationTypeRepository.saveAndFlush(type);
     }
 
     @Override
-    public OperationType editOperationType(OperationType type) {
-        return operationTypeRepository.saveAndFlush(type);
+    public OperationType getById(Integer id) {
+        return operationTypeRepository.getById(id);
     }
 
     @Override

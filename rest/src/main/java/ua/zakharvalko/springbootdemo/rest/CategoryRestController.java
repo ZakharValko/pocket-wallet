@@ -39,6 +39,16 @@ public class CategoryRestController {
         }
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Category> editCategory(@RequestBody @Validated Category category) {
+        if(category == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            this.categoryService.editCategory(category);
+            return new ResponseEntity<>(category, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Category> getById(@PathVariable Integer id) {
         if(id == null){
@@ -50,16 +60,6 @@ public class CategoryRestController {
             } else {
                 return new ResponseEntity<>(category,HttpStatus.OK);
             }
-        }
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Category> editCategory(@RequestBody @Validated Category category) {
-        if(category == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            this.categoryService.editCategory(category);
-            return new ResponseEntity<>(category, HttpStatus.OK);
         }
     }
 

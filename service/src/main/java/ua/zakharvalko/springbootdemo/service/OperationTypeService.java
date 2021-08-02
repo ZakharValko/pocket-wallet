@@ -8,8 +8,8 @@ public interface OperationTypeService {
 
     OperationType addOperationType(OperationType type);
     void deleteOperationType(Integer id);
-    OperationType getById(Integer id);
     OperationType editOperationType(OperationType type);
+    OperationType getById(Integer id);
     List<OperationType> getAllOperationTypes();
 
 }

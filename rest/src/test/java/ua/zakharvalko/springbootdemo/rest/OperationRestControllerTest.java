@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
+import ua.zakharvalko.springbootdemo.domain.Category;
 import ua.zakharvalko.springbootdemo.domain.Operation;
 import ua.zakharvalko.springbootdemo.service.OperationService;
 
@@ -24,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest({OperationRestController.class})
+@ContextConfiguration(classes = SpringBootDemoApplication.class)
 class OperationRestControllerTest {
 
     @Autowired
@@ -44,6 +48,29 @@ class OperationRestControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));;
+    }
+
+    @Test
+    void shouldDeleteOperation() throws Exception {
+        Operation operation = Operation.builder().id(1).build();
+        when(operationService.getById(1)).thenReturn(operation);
+        mockMvc.perform( MockMvcRequestBuilders.delete("/api/operations/{id}", 1) )
+                .andExpect(status().isOk())
+                .andExpect(content().json("{}"));;
+    }
+
+    @Test
+    void shouldEditOperation() throws Exception {
+        Operation oldOperation = Operation.builder().id(1).description("Old description").build();
+        Operation newOperation = Operation.builder().id(1).description("New description").build();
+        when(operationService.editOperation(oldOperation)).thenReturn(newOperation);
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/operations/")
+                .content(asJsonString(newOperation))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().json("{}"));
     }
 
     @Test

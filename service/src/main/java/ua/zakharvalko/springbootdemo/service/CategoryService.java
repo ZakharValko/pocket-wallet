@@ -8,8 +8,8 @@ public interface CategoryService {
 
     Category addCategory(Category category);
     void deleteCategory(Integer id);
-    Category getById(Integer id);
     Category editCategory(Category category);
+    Category getById(Integer id);
     List<Category> getAllCategories();
 
 }

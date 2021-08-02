@@ -7,9 +7,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
+import ua.zakharvalko.springbootdemo.domain.Currency;
 import ua.zakharvalko.springbootdemo.domain.GroupOfCategories;
 import ua.zakharvalko.springbootdemo.service.GroupOfCategoryService;
 
@@ -22,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest({GroupCategoryRestController.class})
+@ContextConfiguration(classes = SpringBootDemoApplication.class)
 class GroupCategoryRestControllerTest {
 
     @Autowired
@@ -51,6 +55,20 @@ class GroupCategoryRestControllerTest {
         mockMvc.perform( MockMvcRequestBuilders.delete("/api/groups-of-categories/{id}", 1) )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));;
+    }
+
+    @Test
+    void shouldEditGroup() throws Exception {
+        GroupOfCategories oldGroup = GroupOfCategories.builder().id(1).title("Old").build();
+        GroupOfCategories newGroup = GroupOfCategories.builder().id(1).title("New").build();
+        when(groupService.editGroup(oldGroup)).thenReturn(newGroup);
+        mockMvc.perform(MockMvcRequestBuilders.put("/api/groups-of-categories/")
+                .content(asJsonString(newGroup))
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON_VALUE)
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().json("{}, {}"));
     }
 
     @Test

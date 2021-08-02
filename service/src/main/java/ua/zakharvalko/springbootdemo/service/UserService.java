@@ -8,7 +8,7 @@ public interface UserService {
 
     User addUser(User user);
     void deleteUser(Integer id);
-    User getById(Integer id);
     User editUser(User user);
-    List<User> getAll();
+    User getById(Integer id);
+    List<User> getAllUsers();
 }

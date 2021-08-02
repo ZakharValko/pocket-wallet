@@ -50,6 +50,17 @@ class GroupOfCategoryServiceImplTest {
     }
 
     @Test
+    void shouldEditGroup() {
+        GroupOfCategories oldGroup = GroupOfCategories.builder().id(1).title("Old").build();
+        GroupOfCategories newGroup = GroupOfCategories.builder().id(1).title("New").build();
+
+        given(groupRepository.getById(oldGroup.getId())).willReturn(newGroup);
+        groupService.editGroup(newGroup);
+
+        verify(groupRepository).saveAndFlush(newGroup);
+    }
+
+    @Test
     void shouldReturnGroupById() {
         GroupOfCategories group = GroupOfCategories.builder().id(1).build();
         when(groupRepository.getById(1)).thenReturn(group);
@@ -70,16 +81,5 @@ class GroupOfCategoryServiceImplTest {
 
         assertEquals(groups, actual);
         verify(groupRepository).findAll();
-    }
-
-    @Test
-    void shouldEditGroup() {
-        GroupOfCategories oldGroup = GroupOfCategories.builder().id(1).title("Old").build();
-        GroupOfCategories newGroup = GroupOfCategories.builder().id(1).title("New").build();
-
-        given(groupRepository.getById(oldGroup.getId())).willReturn(newGroup);
-        groupService.editGroup(newGroup);
-
-        verify(groupRepository).saveAndFlush(newGroup);
     }
 }

@@ -50,17 +50,6 @@ class CurrencyServiceImplTest {
     }
 
     @Test
-    public void shouldReturnCurrencyById() {
-        Currency currency = Currency.builder().id(1).build();
-        when(currencyRepository.getById(1)).thenReturn(currency);
-
-        Currency actual = currencyService.getById(1);
-
-        assertEquals(currency.getId(), actual.getId());
-        verify(currencyRepository).getById(1);
-    }
-
-    @Test
     public void shouldReturnAllCurrencies() {
         List<Currency> currencies = new ArrayList<>();
         currencies.add(new Currency());
@@ -70,6 +59,17 @@ class CurrencyServiceImplTest {
 
         assertEquals(currencies, actual);
         verify(currencyRepository).findAll();
+    }
+
+    @Test
+    public void shouldReturnCurrencyById() {
+        Currency currency = Currency.builder().id(1).build();
+        when(currencyRepository.getById(1)).thenReturn(currency);
+
+        Currency actual = currencyService.getById(1);
+
+        assertEquals(currency.getId(), actual.getId());
+        verify(currencyRepository).getById(1);
     }
 
     public void shouldEditCurrency() {

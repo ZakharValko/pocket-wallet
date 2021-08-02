@@ -63,6 +63,17 @@ class OperationServiceImplTest {
     }
 
     @Test
+    public void shouldEditOperation() {
+        Operation oldOperation = Operation.builder().id(1).price(100.00).build();
+        Operation newOperation = Operation.builder().id(1).price(150.00).build();
+
+        given(operationRepository.getById(oldOperation.getId())).willReturn(newOperation);
+        operationService.editOperation(newOperation);
+
+        verify(operationRepository).saveAndFlush(newOperation);
+    }
+
+    @Test
     public void shouldReturnOperationById() {
         Operation operation = Operation.builder().id(1)
                 .description("description")
@@ -78,17 +89,6 @@ class OperationServiceImplTest {
 
         assertEquals(operation.getId(), actual.getId());
         verify(operationRepository).getById(1);
-    }
-
-    @Test
-    public void shouldEditOperation() {
-        Operation oldOperation = Operation.builder().id(1).price(100.00).build();
-        Operation newOperation = Operation.builder().id(1).price(150.00).build();
-
-        given(operationRepository.getById(oldOperation.getId())).willReturn(newOperation);
-        operationService.editOperation(newOperation);
-
-        verify(operationRepository).saveAndFlush(newOperation);
     }
 
     @Test

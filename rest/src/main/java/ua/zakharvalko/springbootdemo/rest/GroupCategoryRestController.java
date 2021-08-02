@@ -39,6 +39,16 @@ public class GroupCategoryRestController {
         }
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<GroupOfCategories> editGroup(@RequestBody @Validated GroupOfCategories group) {
+        if(group == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            this.groupService.editGroup(group);
+            return new ResponseEntity<>(group, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<GroupOfCategories> getById(@PathVariable Integer id) {
         if(id == null){
@@ -50,16 +60,6 @@ public class GroupCategoryRestController {
             } else {
                 return new ResponseEntity<>(group, HttpStatus.OK);
             }
-        }
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<GroupOfCategories> editGroup(@RequestBody @Validated GroupOfCategories group) {
-        if(group == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            this.groupService.editGroup(group);
-            return new ResponseEntity<>(group, HttpStatus.OK);
         }
     }
 

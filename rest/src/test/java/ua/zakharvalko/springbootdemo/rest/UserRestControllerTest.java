@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
 import ua.zakharvalko.springbootdemo.domain.User;
 import ua.zakharvalko.springbootdemo.service.UserService;
 
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest({UserRestController.class})
+@ContextConfiguration(classes = SpringBootDemoApplication.class)
 class UserRestControllerTest {
 
     @Autowired
@@ -82,7 +85,7 @@ class UserRestControllerTest {
                 User.builder().id(1).build(),
                 User.builder().id(2).build()
         );
-        when(userService.getAll()).thenReturn(users);
+        when(userService.getAllUsers()).thenReturn(users);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{}, {}]"));;

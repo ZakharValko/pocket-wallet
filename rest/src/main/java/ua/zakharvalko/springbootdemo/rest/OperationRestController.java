@@ -42,6 +42,16 @@ public class OperationRestController {
         }
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Operation> editOperation(@RequestBody @Validated Operation operation) {
+        if(operation == null){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            this.operationService.editOperation(operation);
+            return new ResponseEntity<>(operation, HttpStatus.OK);
+        }
+    }
+
     @RequestMapping(value = "/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Operation> getById(@PathVariable Integer id) {
         if(id == null) {
@@ -53,16 +63,6 @@ public class OperationRestController {
             } else {
                 return new ResponseEntity<>(operation, HttpStatus.OK);
             }
-        }
-    }
-
-    @RequestMapping(value = "/", method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Operation> editOperation(@RequestBody @Validated Operation operation) {
-        if(operation == null){
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        } else {
-            this.operationService.editOperation(operation);
-            return new ResponseEntity<>(operation, HttpStatus.OK);
         }
     }
 

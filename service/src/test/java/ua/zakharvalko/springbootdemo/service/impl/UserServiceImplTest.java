@@ -49,17 +49,6 @@ class UserServiceImplTest {
     }
 
     @Test
-    public void shouldReturnUserById() {
-        User user = User.builder().id(1).build();
-        when(userRepository.getById(1)).thenReturn(user);
-
-        User actual = userService.getById(1);
-
-        assertEquals(user.getId(), actual.getId());
-        verify(userRepository).getById(1);
-    }
-
-    @Test
     public void shouldEditUser() {
         User oldUser = User.builder().id(1).build();
         oldUser.setFirstName("Old First Name");
@@ -73,12 +62,23 @@ class UserServiceImplTest {
     }
 
     @Test
+    public void shouldReturnUserById() {
+        User user = User.builder().id(1).build();
+        when(userRepository.getById(1)).thenReturn(user);
+
+        User actual = userService.getById(1);
+
+        assertEquals(user.getId(), actual.getId());
+        verify(userRepository).getById(1);
+    }
+
+    @Test
     public void shouldReturnAllUsers() {
         List<User> users = new ArrayList<>();
         users.add(new User());
         when(userRepository.findAll()).thenReturn(users);
 
-        List<User> actual = userService.getAll();
+        List<User> actual = userService.getAllUsers();
 
         assertEquals(users, actual);
         verify(userRepository).findAll();

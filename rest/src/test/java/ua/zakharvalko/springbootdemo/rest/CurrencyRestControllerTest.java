@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
 import ua.zakharvalko.springbootdemo.domain.Currency;
 import ua.zakharvalko.springbootdemo.service.CurrencyService;
 
@@ -22,6 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @WebMvcTest({CurrencyRestController.class})
+@ContextConfiguration(classes = SpringBootDemoApplication.class)
 class CurrencyRestControllerTest {
 
     @Autowired
@@ -54,15 +57,6 @@ class CurrencyRestControllerTest {
     }
 
     @Test
-    void shouldReturnCurrencyById() throws Exception {
-        Currency currency = Currency.builder().id(1).build();
-        when(currencyService.getById(1)).thenReturn(currency);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/currencies/{id}", 1))
-                .andExpect(status().isOk())
-                .andExpect(content().json("{}"));
-    }
-
-    @Test
     void shouldEditCurrency() throws Exception {
         Currency oldCurrency = Currency.builder().id(1).title("USD").build();
         Currency newCurrency = Currency.builder().id(1).title("US Dollars").build();
@@ -74,6 +68,15 @@ class CurrencyRestControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
+    }
+
+    @Test
+    void shouldReturnCurrencyById() throws Exception {
+        Currency currency = Currency.builder().id(1).build();
+        when(currencyService.getById(1)).thenReturn(currency);
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/currencies/{id}", 1))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{}"));
     }
 
     @Test
