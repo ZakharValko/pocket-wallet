@@ -100,4 +100,15 @@ public class OperationServiceImpl implements OperationService {
 
         return (income - outcome)/100;
     }
+
+    @Override
+    public Operation transferBetweenAccounts(Operation operation, Integer accountId) {
+        if(operation.getOperationType().getId().equals(2)){
+            if(operation.getAccount().getId().equals(accountId)){
+                System.out.println("You cannot make transfer on the same account");
+            } else {
+
+            }
+        }
+    }
 }

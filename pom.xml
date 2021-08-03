@@ -6,8 +6,8 @@
     <modules>
         <module>domain</module>
         <module>rest</module>
-        <module>service</module>
         <module>dao</module>
+        <module>service</module>
     </modules>
 
     <parent>
