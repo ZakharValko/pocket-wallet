@@ -115,4 +115,15 @@ public class OperationRestController {
         Long cashFlow = this.operationService.getCashFlow(account, from, to);
         return new ResponseEntity<>(cashFlow, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/transfer-btw-accounts", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Operation>> transferBetweenAccounts(@RequestBody @Validated Operation operation,
+                                                                   @RequestParam(value = "account") Integer id) {
+        if(operation == null && id == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            List<Operation> operations = this.operationService.transferBetweenAccounts(operation, id);
+            return new ResponseEntity<>(operations, HttpStatus.OK);
+        }
+    }
 }

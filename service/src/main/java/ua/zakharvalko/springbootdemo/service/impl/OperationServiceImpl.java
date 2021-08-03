@@ -3,9 +3,12 @@ package ua.zakharvalko.springbootdemo.service.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.zakharvalko.springbootdemo.dao.OperationRepository;
+import ua.zakharvalko.springbootdemo.domain.Account;
 import ua.zakharvalko.springbootdemo.domain.Operation;
+import ua.zakharvalko.springbootdemo.domain.OperationType;
 import ua.zakharvalko.springbootdemo.service.OperationService;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -102,13 +105,30 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public Operation transferBetweenAccounts(Operation operation, Integer accountId) {
-        if(operation.getOperationType().getId().equals(2)){
+    public List<Operation> transferBetweenAccounts(Operation operation, Integer accountId) {
+        List<Operation> operationsToReturn = new ArrayList<>();
+
+
+        if(operation.getOperationType().getId().equals(1)){
             if(operation.getAccount().getId().equals(accountId)){
                 System.out.println("You cannot make transfer on the same account");
             } else {
+                operationRepository.saveAndFlush(operation);
+                operationsToReturn.add(operation);
 
+                Operation backOperation = Operation.builder()
+                        .operationType(OperationType.builder().id(2).build())
+                        .account(Account.builder().id(accountId).build())
+                        .description("Transfer from account " + operation.getAccount().getId())
+                        .price(operation.getPrice())
+                        .date(new Date())
+                        .build();
+                operationRepository.saveAndFlush(backOperation);
+                operationsToReturn.add(backOperation);
             }
+        } else {
+            System.out.println("Incorrect type of operation!");
         }
+        return operationsToReturn;
     }
 }

@@ -141,6 +141,10 @@ class OperationRestControllerTest {
                 .andExpect(content().string("0.0"));;
     }
 
+    void shouldMakeTransferBetweenAccounts() throws Exception {
+
+    }
+
     public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);

@@ -16,5 +16,5 @@ public interface OperationService {
     List<Operation> getOperationByFilter(Integer account, Integer category, Integer group, Integer currency, Integer operationType, Date from, Date to);
     Long getTotalExpensesByFilter(Integer account, Integer category, Integer group, Integer currency, Date from, Date to);
     Long getCashFlow(Integer account, Date from, Date to);
-    Operation transferBetweenAccounts(Operation operation, Integer accountId);
+    List<Operation> transferBetweenAccounts(Operation operation, Integer accountId);
 }
