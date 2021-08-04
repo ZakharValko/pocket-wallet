@@ -23,7 +23,7 @@ public class RoleRestController {
         if(role == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.roleService.addRole(role);
+            this.roleService.saveOrUpdate(role);
             return new ResponseEntity<>(role, HttpStatus.CREATED);
         }
 
@@ -35,7 +35,7 @@ public class RoleRestController {
         if(role == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            this.roleService.deleteRole(id);
+            this.roleService.delete(id);
             return new ResponseEntity<>(role, HttpStatus.OK);
         }
     }
@@ -45,7 +45,7 @@ public class RoleRestController {
         if(role == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.roleService.editRole(role);
+            this.roleService.saveOrUpdate(role);
             return new ResponseEntity<>(role, HttpStatus.OK);
         }
     }
@@ -67,7 +67,7 @@ public class RoleRestController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Role>> getAllRoles() {
-        List<Role> roles = this.roleService.getAllRoles();
+        List<Role> roles = this.roleService.getAll();
         if(roles.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

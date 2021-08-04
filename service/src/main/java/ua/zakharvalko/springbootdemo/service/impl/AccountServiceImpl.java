@@ -18,18 +18,13 @@ public class AccountServiceImpl implements AccountService{
     private AccountRepository accountRepository;
 
     @Override
-    public Account addAccount(Account account) {
+    public Account saveOrUpdate(Account account) {
         return accountRepository.saveAndFlush(account);
     }
 
     @Override
-    public void deleteAccount(Integer id) {
+    public void delete(Integer id) {
         accountRepository.deleteById(id);
-    }
-
-    @Override
-    public Account editAccount(Account account) {
-        return accountRepository.saveAndFlush(account);
     }
 
     @Override
@@ -38,7 +33,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public List<Account> getAllAccounts() {
+    public List<Account> getAll() {
         return accountRepository.findAll();
     }
 

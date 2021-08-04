@@ -7,10 +7,9 @@ import java.util.List;
 
 public interface GroupOfCategoryService {
 
-    GroupOfCategories addGroup(GroupOfCategories group);
-    void deleteGroup(Integer id);
-    GroupOfCategories editGroup(GroupOfCategories group);
+    GroupOfCategories saveOrUpdate(GroupOfCategories group);
+    void delete(Integer id);
     GroupOfCategories getById(Integer id);
-    List<GroupOfCategories> getAllGroups();
+    List<GroupOfCategories> getAll();
 
 }

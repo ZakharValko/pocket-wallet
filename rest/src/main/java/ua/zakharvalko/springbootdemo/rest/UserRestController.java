@@ -23,7 +23,7 @@ public class UserRestController {
         if(user == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.userService.addUser(user);
+            this.userService.saveOrUpdate(user);
             return new ResponseEntity<>(user, HttpStatus.CREATED);
         }
     }
@@ -34,7 +34,7 @@ public class UserRestController {
         if(user == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            this.userService.deleteUser(id);
+            this.userService.delete(id);
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }
@@ -44,7 +44,7 @@ public class UserRestController {
         if(user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.userService.editUser(user);
+            this.userService.saveOrUpdate(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }
@@ -67,7 +67,7 @@ public class UserRestController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = this.userService.getAllUsers();
+        List<User> users = this.userService.getAll();
         if(users.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

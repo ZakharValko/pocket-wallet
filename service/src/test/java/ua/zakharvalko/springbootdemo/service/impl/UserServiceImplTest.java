@@ -33,7 +33,7 @@ class UserServiceImplTest {
 
         when(userRepository.saveAndFlush(user)).thenReturn(user);
 
-        User added = userService.addUser(user);
+        User added = userService.saveOrUpdate(user);
 
         assertEquals(user.getId(), added.getId());
         verify(userRepository).saveAndFlush(user);
@@ -44,7 +44,7 @@ class UserServiceImplTest {
         User user = User.builder().id(1).build();
 
         when(userRepository.getById(user.getId())).thenReturn(user);
-        userService.deleteUser(user.getId());
+        userService.delete(user.getId());
         verify(userRepository).deleteById(user.getId());
     }
 
@@ -56,7 +56,7 @@ class UserServiceImplTest {
         newUser.setFirstName("New First Name");
 
         given(userRepository.getById(oldUser.getId())).willReturn(oldUser);
-        userService.editUser(newUser);
+        userService.saveOrUpdate(newUser);
 
         verify(userRepository).saveAndFlush(newUser);
     }
@@ -78,7 +78,7 @@ class UserServiceImplTest {
         users.add(new User());
         when(userRepository.findAll()).thenReturn(users);
 
-        List<User> actual = userService.getAllUsers();
+        List<User> actual = userService.getAll();
 
         assertEquals(users, actual);
         verify(userRepository).findAll();

@@ -23,7 +23,7 @@ public class CurrencyRestController {
         if(currency == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.currencyService.addCurrency(currency);
+            this.currencyService.saveOrUpdate(currency);
             return new ResponseEntity<>(currency, HttpStatus.CREATED);
         }
     }
@@ -34,7 +34,7 @@ public class CurrencyRestController {
         if(currency == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            this.currencyService.deleteCurrency(id);
+            this.currencyService.delete(id);
             return new ResponseEntity<>(currency, HttpStatus.OK);
         }
     }
@@ -44,7 +44,7 @@ public class CurrencyRestController {
         if(currency == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.currencyService.editCurrency(currency);
+            this.currencyService.saveOrUpdate(currency);
             return new ResponseEntity<>(currency, HttpStatus.OK);
         }
     }
@@ -65,7 +65,7 @@ public class CurrencyRestController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Currency>> getAllCurrencies() {
-        List<Currency> currencies = this.currencyService.getAllCurrencies();
+        List<Currency> currencies = this.currencyService.getAll();
         if(currencies.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

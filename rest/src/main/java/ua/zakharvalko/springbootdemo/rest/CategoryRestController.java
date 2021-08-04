@@ -23,7 +23,7 @@ public class CategoryRestController {
         if(category == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.categoryService.addCategory(category);
+            this.categoryService.saveOrUpdate(category);
             return new ResponseEntity<>(category, HttpStatus.CREATED);
         }
     }
@@ -34,7 +34,7 @@ public class CategoryRestController {
         if(category == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            this.categoryService.deleteCategory(id);
+            this.categoryService.delete(id);
             return new ResponseEntity<>(category, HttpStatus.OK);
         }
     }
@@ -44,7 +44,7 @@ public class CategoryRestController {
         if(category == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.categoryService.editCategory(category);
+            this.categoryService.saveOrUpdate(category);
             return new ResponseEntity<>(category, HttpStatus.OK);
         }
     }
@@ -65,7 +65,7 @@ public class CategoryRestController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Category>> getAllCategories(){
-        List<Category> categories = this.categoryService.getAllCategories();
+        List<Category> categories = this.categoryService.getAll();
         if(categories.isEmpty()){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

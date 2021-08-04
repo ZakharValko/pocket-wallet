@@ -15,18 +15,13 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public User addUser(User user) {
+    public User saveOrUpdate(User user) {
         return userRepository.saveAndFlush(user);
     }
 
     @Override
-    public void deleteUser(Integer id) {
+    public void delete(Integer id) {
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public User editUser(User user) {
-        return userRepository.saveAndFlush(user);
     }
 
     @Override
@@ -35,7 +30,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> getAll() {
         return userRepository.findAll();
     }
 }

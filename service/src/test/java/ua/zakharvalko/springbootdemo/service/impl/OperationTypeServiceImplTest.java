@@ -34,7 +34,7 @@ class OperationTypeServiceImplTest {
 
         when(operationTypeRepository.saveAndFlush(type)).thenReturn(type);
 
-        OperationType added = operationTypeService.addOperationType(type);
+        OperationType added = operationTypeService.saveOrUpdate(type);
 
         assertEquals(type.getId(), added.getId());
         verify(operationTypeRepository).saveAndFlush(type);
@@ -45,7 +45,7 @@ class OperationTypeServiceImplTest {
         OperationType type = OperationType.builder().id(1).build();
 
         when(operationTypeRepository.getById(type.getId())).thenReturn(type);
-        operationTypeService.deleteOperationType(type.getId());
+        operationTypeService.delete(type.getId());
         verify(operationTypeRepository).deleteById(type.getId());
     }
 
@@ -57,7 +57,7 @@ class OperationTypeServiceImplTest {
         newType.setTitle("New");
 
         given(operationTypeRepository.getById(oldType.getId())).willReturn(oldType);
-        operationTypeService.editOperationType(newType);
+        operationTypeService.saveOrUpdate(newType);
 
         verify(operationTypeRepository).saveAndFlush(newType);
     }
@@ -79,7 +79,7 @@ class OperationTypeServiceImplTest {
         types.add(new OperationType());
         when(operationTypeRepository.findAll()).thenReturn(types);
 
-        List<OperationType> actual = operationTypeService.getAllOperationTypes();
+        List<OperationType> actual = operationTypeService.getAll();
 
         assertEquals(types, actual);
         verify(operationTypeRepository).findAll();

@@ -34,7 +34,7 @@ class CurrencyServiceImplTest {
 
         when(currencyRepository.saveAndFlush(currency)).thenReturn(currency);
 
-        Currency added = currencyService.addCurrency(currency);
+        Currency added = currencyService.saveOrUpdate(currency);
 
         assertEquals(currency.getId(), added.getId());
         verify(currencyRepository).saveAndFlush(currency);
@@ -45,7 +45,7 @@ class CurrencyServiceImplTest {
         Currency currency = Currency.builder().id(1).build();
 
         when(currencyRepository.getById(currency.getId())).thenReturn(currency);
-        currencyService.deleteCurrency(currency.getId());
+        currencyService.delete(currency.getId());
         verify(currencyRepository).deleteById(currency.getId());
     }
 
@@ -55,7 +55,7 @@ class CurrencyServiceImplTest {
         currencies.add(new Currency());
         when(currencyRepository.findAll()).thenReturn(currencies);
 
-        List<Currency> actual = currencyService.getAllCurrencies();
+        List<Currency> actual = currencyService.getAll();
 
         assertEquals(currencies, actual);
         verify(currencyRepository).findAll();
@@ -70,15 +70,5 @@ class CurrencyServiceImplTest {
 
         assertEquals(currency.getId(), actual.getId());
         verify(currencyRepository).getById(1);
-    }
-
-    public void shouldEditCurrency() {
-        Currency oldCurrency = Currency.builder().id(1).title("USD").build();
-        Currency newCurrency = Currency.builder().id(1).title("US Dollars").build();
-
-        given(currencyRepository.getById(oldCurrency.getId())).willReturn(newCurrency);
-        currencyService.editCurrency(newCurrency);
-
-        verify(currencyRepository).saveAndFlush(newCurrency);
     }
 }

@@ -7,10 +7,9 @@ import java.util.List;
 
 public interface AccountService {
 
-    Account addAccount(Account account);
-    void deleteAccount(Integer id);
-    Account editAccount(Account account);
+    Account saveOrUpdate(Account account);
+    void delete(Integer id);
     Account getById(Integer id);
-    List<Account> getAllAccounts();
+    List<Account> getAll();
     Long getCurrentBalanceOnDate(Integer id, Date date);
 }

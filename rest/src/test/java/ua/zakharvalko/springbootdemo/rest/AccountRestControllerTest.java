@@ -39,7 +39,7 @@ class AccountRestControllerTest {
     @Test
     void shouldAddAccount() throws Exception {
         Account account = Account.builder().id(1).build();
-        when(accountService.addAccount(account)).thenReturn(account);
+        when(accountService.saveOrUpdate(account)).thenReturn(account);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/accounts/")
                         .content(asJsonString(account))
@@ -64,7 +64,7 @@ class AccountRestControllerTest {
     void shouldEditAccount() throws Exception {
         Account oldAccount = Account.builder().id(1).balance(100L).build();
         Account newAccount = Account.builder().id(1).balance(150L).build();
-        when(accountService.editAccount(oldAccount)).thenReturn(newAccount);
+        when(accountService.saveOrUpdate(oldAccount)).thenReturn(newAccount);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/accounts/")
                 .content(asJsonString(newAccount))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -89,7 +89,7 @@ class AccountRestControllerTest {
                 Account.builder().id(1).build(),
                 Account.builder().id(2).build()
         );
-        when(accountService.getAllAccounts()).thenReturn(accounts);
+        when(accountService.getAll()).thenReturn(accounts);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/accounts/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{}, {}]"));

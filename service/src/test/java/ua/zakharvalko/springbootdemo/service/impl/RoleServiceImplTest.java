@@ -34,7 +34,7 @@ class RoleServiceImplTest {
 
         when(roleRepository.saveAndFlush(role)).thenReturn(role);
 
-        Role added = roleService.addRole(role);
+        Role added = roleService.saveOrUpdate(role);
 
         assertEquals(role.getId(), added.getId());
         verify(roleRepository).saveAndFlush(role);
@@ -45,7 +45,7 @@ class RoleServiceImplTest {
         Role role = Role.builder().id(1).build();
 
         when(roleRepository.getById(role.getId())).thenReturn(role);
-        roleService.deleteRole(role.getId());
+        roleService.delete(role.getId());
         verify(roleRepository).deleteById(role.getId());
     }
 
@@ -55,7 +55,7 @@ class RoleServiceImplTest {
         Role newRole = Role.builder().id(1).title("Administrator").build();
 
         given(roleRepository.getById(oldRole.getId())).willReturn(newRole);
-        roleService.editRole(newRole);
+        roleService.saveOrUpdate(newRole);
 
         verify(roleRepository).saveAndFlush(newRole);
     }
@@ -77,7 +77,7 @@ class RoleServiceImplTest {
         roles.add(new Role());
         when(roleRepository.findAll()).thenReturn(roles);
 
-        List<Role> actual = roleService.getAllRoles();
+        List<Role> actual = roleService.getAll();
 
         assertEquals(roles, actual);
         verify(roleRepository).findAll();

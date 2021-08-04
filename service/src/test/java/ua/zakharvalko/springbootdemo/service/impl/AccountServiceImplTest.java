@@ -41,7 +41,7 @@ class AccountServiceImplTest {
 
         when(accountRepository.saveAndFlush(account)).thenReturn(account);
 
-        Account added = accountService.addAccount(account);
+        Account added = accountService.saveOrUpdate(account);
 
         assertEquals(account.getId(), added.getId());
         verify(accountRepository).saveAndFlush(account);
@@ -52,7 +52,7 @@ class AccountServiceImplTest {
         Account account = Account.builder().id(1).build();
 
         when(accountRepository.getById(account.getId())).thenReturn(account);
-        accountService.deleteAccount(account.getId());
+        accountService.delete(account.getId());
         verify(accountRepository).deleteById(account.getId());
 
     }
@@ -65,7 +65,7 @@ class AccountServiceImplTest {
         newAccount.setBalance(100L);
 
         given(accountRepository.getById(oldAccount.getId())).willReturn(oldAccount);
-        accountService.editAccount(newAccount);
+        accountService.saveOrUpdate(newAccount);
 
         verify(accountRepository).saveAndFlush(newAccount);
     }
@@ -87,7 +87,7 @@ class AccountServiceImplTest {
         accountsFromMock.add(new Account());
         when(accountRepository.findAll()).thenReturn(accountsFromMock);
 
-        List<Account> accounts = accountService.getAllAccounts();
+        List<Account> accounts = accountService.getAll();
 
         assertEquals(accounts, accountsFromMock);
         verify(accountRepository).findAll();

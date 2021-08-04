@@ -36,7 +36,7 @@ class RoleRestControllerTest {
     @Test
     void shouldAddRole() throws Exception {
         Role role = Role.builder().id(1).build();
-        when(roleService.addRole(role)).thenReturn(role);
+        when(roleService.saveOrUpdate(role)).thenReturn(role);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/roles/")
                         .content(asJsonString(role))
@@ -60,7 +60,7 @@ class RoleRestControllerTest {
     void shouldEditRole() throws Exception {
         Role oldRole = Role.builder().id(1).title("Old").build();
         Role newRole= Role.builder().id(1).title("New").build();
-        when(roleService.editRole(oldRole)).thenReturn(newRole);
+        when(roleService.saveOrUpdate(oldRole)).thenReturn(newRole);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/roles/")
                 .content(asJsonString(newRole))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +85,7 @@ class RoleRestControllerTest {
                 Role.builder().id(1).build(),
                 Role.builder().id(2).build()
         );
-        when(roleService.getAllRoles()).thenReturn(roles);
+        when(roleService.getAll()).thenReturn(roles);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/roles/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{}, {}]"));

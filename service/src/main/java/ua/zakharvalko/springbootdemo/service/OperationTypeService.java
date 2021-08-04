@@ -6,10 +6,9 @@ import java.util.List;
 
 public interface OperationTypeService {
 
-    OperationType addOperationType(OperationType type);
-    void deleteOperationType(Integer id);
-    OperationType editOperationType(OperationType type);
+    OperationType saveOrUpdate(OperationType type);
+    void delete(Integer id);
     OperationType getById(Integer id);
-    List<OperationType> getAllOperationTypes();
+    List<OperationType> getAll();
 
 }

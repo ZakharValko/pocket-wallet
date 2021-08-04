@@ -23,7 +23,7 @@ public class OperationTypeRestController {
         if(type == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.operationTypeService.addOperationType(type);
+            this.operationTypeService.saveOrUpdate(type);
             return new ResponseEntity<>(type, HttpStatus.CREATED);
         }
     }
@@ -34,7 +34,7 @@ public class OperationTypeRestController {
         if(type == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            this.operationTypeService.deleteOperationType(id);
+            this.operationTypeService.delete(id);
             return new ResponseEntity<>(type, HttpStatus.OK);
         }
     }
@@ -44,7 +44,7 @@ public class OperationTypeRestController {
         if(type == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.operationTypeService.editOperationType(type);
+            this.operationTypeService.saveOrUpdate(type);
             return new ResponseEntity<>(type, HttpStatus.OK);
         }
     }
@@ -65,7 +65,7 @@ public class OperationTypeRestController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<OperationType>> getAllOperationTypes() {
-        List<OperationType> types = this.operationTypeService.getAllOperationTypes();
+        List<OperationType> types = this.operationTypeService.getAll();
         if(types.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

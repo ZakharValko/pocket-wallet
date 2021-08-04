@@ -15,18 +15,13 @@ public class GroupOfCategoryServiceImpl implements GroupOfCategoryService {
     private GroupOfCategoryRepository groupRepository;
 
     @Override
-    public GroupOfCategories addGroup(GroupOfCategories group) {
+    public GroupOfCategories saveOrUpdate(GroupOfCategories group) {
         return groupRepository.saveAndFlush(group);
     }
 
     @Override
-    public void deleteGroup(Integer id) {
+    public void delete(Integer id) {
         groupRepository.deleteById(id);
-    }
-
-    @Override
-    public GroupOfCategories editGroup(GroupOfCategories group) {
-        return groupRepository.saveAndFlush(group);
     }
 
     @Override
@@ -35,7 +30,7 @@ public class GroupOfCategoryServiceImpl implements GroupOfCategoryService {
     }
 
     @Override
-    public List<GroupOfCategories> getAllGroups() {
+    public List<GroupOfCategories> getAll() {
         return groupRepository.findAll();
     }
 }

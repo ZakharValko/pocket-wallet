@@ -1,20 +1,24 @@
 package ua.zakharvalko.springbootdemo.service;
 
-import ua.zakharvalko.springbootdemo.domain.Account;
 import ua.zakharvalko.springbootdemo.domain.Operation;
+import ua.zakharvalko.springbootdemo.domain.spec.OperationFilter;
 
 import java.util.Date;
 import java.util.List;
 
 public interface OperationService {
 
-    Operation addOperation(Operation operation);
-    void deleteOperation(Integer id);
-    Operation editOperation(Operation operation);
+    Operation saveOrUpdate(Operation operation);
+    void delete(Integer id);
     Operation getById(Integer id);
-    List<Operation> getAllOperations();
-    List<Operation> getOperationByFilter(Integer account, Integer category, Integer group, Integer currency, Integer operationType, Date from, Date to);
-    Long getTotalExpensesByFilter(Integer account, Integer category, Integer group, Integer currency, Date from, Date to);
-    Long getCashFlow(Integer account, Date from, Date to);
-    List<Operation> transferBetweenAccounts(Operation operation, Integer accountId);
+    List<Operation> getAll();
+    List<Operation> getOperationsByAccountId(Integer id);
+    List<Operation> getOperationsByFilter(OperationFilter filter);
+    double getTotalExpensesByFilter(OperationFilter filter);
+
+    //double getCashFlow(OperationFilter filter);
+
+    //List<Operation> transferBetweenAccounts(Operation operation, Integer accountId);
+
+
 }

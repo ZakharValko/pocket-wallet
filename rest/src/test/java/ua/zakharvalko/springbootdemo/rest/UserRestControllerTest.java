@@ -36,7 +36,7 @@ class UserRestControllerTest {
     @Test
     void shouldAddUser() throws Exception {
         User user = User.builder().id(1).build();
-        when(userService.addUser(user)).thenReturn(user);
+        when(userService.saveOrUpdate(user)).thenReturn(user);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/users/")
                         .content(asJsonString(user))
@@ -60,7 +60,7 @@ class UserRestControllerTest {
     void shouldEditUser() throws Exception {
         User oldUser = User.builder().id(1).firstName("Alex").build();
         User newUser = User.builder().id(1).firstName("John").build();
-        when(userService.editUser(oldUser)).thenReturn(newUser);
+        when(userService.saveOrUpdate(oldUser)).thenReturn(newUser);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/users/")
                 .content(asJsonString(newUser))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +85,7 @@ class UserRestControllerTest {
                 User.builder().id(1).build(),
                 User.builder().id(2).build()
         );
-        when(userService.getAllUsers()).thenReturn(users);
+        when(userService.getAll()).thenReturn(users);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{}, {}]"));;

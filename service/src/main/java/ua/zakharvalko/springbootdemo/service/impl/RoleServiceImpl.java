@@ -15,18 +15,13 @@ public class RoleServiceImpl implements RoleService {
     private RoleRepository roleRepository;
 
     @Override
-    public Role addRole(Role role) {
+    public Role saveOrUpdate(Role role) {
         return roleRepository.saveAndFlush(role);
     }
 
     @Override
-    public void deleteRole(Integer id) {
+    public void delete(Integer id) {
         roleRepository.deleteById(id);
-    }
-
-    @Override
-    public Role editRole(Role role) {
-        return roleRepository.saveAndFlush(role);
     }
 
     @Override
@@ -35,7 +30,7 @@ public class RoleServiceImpl implements RoleService {
     }
 
     @Override
-    public List<Role> getAllRoles() {
+    public List<Role> getAll() {
         return roleRepository.findAll();
     }
 }

@@ -1,4 +1,4 @@
-package ua.zakharvalko.springbootdemo;
+package ua.zakharvalko.springbootdemo.dao;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

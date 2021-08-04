@@ -15,18 +15,13 @@ public class OperationTypeServiceImpl implements OperationTypeService{
     private OperationTypeRepository operationTypeRepository;
 
     @Override
-    public OperationType addOperationType(OperationType type) {
+    public OperationType saveOrUpdate(OperationType type) {
         return operationTypeRepository.saveAndFlush(type);
     }
 
     @Override
-    public void deleteOperationType(Integer id) {
+    public void delete(Integer id) {
         operationTypeRepository.deleteById(id);
-    }
-
-    @Override
-    public OperationType editOperationType(OperationType type) {
-        return operationTypeRepository.saveAndFlush(type);
     }
 
     @Override
@@ -35,7 +30,7 @@ public class OperationTypeServiceImpl implements OperationTypeService{
     }
 
     @Override
-    public List<OperationType> getAllOperationTypes() {
+    public List<OperationType> getAll() {
         return operationTypeRepository.findAll();
     }
 }

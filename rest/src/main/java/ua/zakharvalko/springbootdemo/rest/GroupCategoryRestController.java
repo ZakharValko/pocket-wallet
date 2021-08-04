@@ -23,7 +23,7 @@ public class GroupCategoryRestController {
         if(groupOfCategories == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.groupService.addGroup(groupOfCategories);
+            this.groupService.saveOrUpdate(groupOfCategories);
             return new ResponseEntity<>(groupOfCategories, HttpStatus.CREATED);
         }
     }
@@ -34,7 +34,7 @@ public class GroupCategoryRestController {
         if(group == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            this.groupService.deleteGroup(id);
+            this.groupService.delete(id);
             return new ResponseEntity<>(group, HttpStatus.OK);
         }
     }
@@ -44,7 +44,7 @@ public class GroupCategoryRestController {
         if(group == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.groupService.editGroup(group);
+            this.groupService.saveOrUpdate(group);
             return new ResponseEntity<>(group, HttpStatus.OK);
         }
     }
@@ -65,7 +65,7 @@ public class GroupCategoryRestController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<GroupOfCategories>> getAllGroups() {
-        List<GroupOfCategories> groups = this.groupService.getAllGroups();
+        List<GroupOfCategories> groups = this.groupService.getAll();
         if(groups.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

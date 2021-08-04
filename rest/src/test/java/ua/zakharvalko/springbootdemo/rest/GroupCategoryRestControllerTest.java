@@ -12,7 +12,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
-import ua.zakharvalko.springbootdemo.domain.Currency;
 import ua.zakharvalko.springbootdemo.domain.GroupOfCategories;
 import ua.zakharvalko.springbootdemo.service.GroupOfCategoryService;
 
@@ -37,7 +36,7 @@ class GroupCategoryRestControllerTest {
     @Test
     void shouldAddGroup() throws Exception {
         GroupOfCategories group = GroupOfCategories.builder().id(1).title("Title").build();
-        when(groupService.addGroup(group)).thenReturn(group);
+        when(groupService.saveOrUpdate(group)).thenReturn(group);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/groups-of-categories/")
                         .content(asJsonString(group))
@@ -61,7 +60,7 @@ class GroupCategoryRestControllerTest {
     void shouldEditGroup() throws Exception {
         GroupOfCategories oldGroup = GroupOfCategories.builder().id(1).title("Old").build();
         GroupOfCategories newGroup = GroupOfCategories.builder().id(1).title("New").build();
-        when(groupService.editGroup(oldGroup)).thenReturn(newGroup);
+        when(groupService.saveOrUpdate(oldGroup)).thenReturn(newGroup);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/groups-of-categories/")
                 .content(asJsonString(newGroup))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -86,7 +85,7 @@ class GroupCategoryRestControllerTest {
                 GroupOfCategories.builder().id(1).build(),
                 GroupOfCategories.builder().id(2).build()
         );
-        when(groupService.getAllGroups()).thenReturn(groups);
+        when(groupService.getAll()).thenReturn(groups);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/groups-of-categories/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{}, {}]"));;

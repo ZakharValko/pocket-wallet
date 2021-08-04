@@ -34,7 +34,7 @@ class GroupOfCategoryServiceImplTest {
 
         when(groupRepository.saveAndFlush(group)).thenReturn(group);
 
-        GroupOfCategories added = groupService.addGroup(group);
+        GroupOfCategories added = groupService.saveOrUpdate(group);
 
         assertEquals(group.getId(), added.getId());
         verify(groupRepository).saveAndFlush(group);
@@ -45,7 +45,7 @@ class GroupOfCategoryServiceImplTest {
         GroupOfCategories group = GroupOfCategories.builder().id(1).build();
 
         when(groupRepository.getById(group.getId())).thenReturn(group);
-        groupService.deleteGroup(group.getId());
+        groupService.delete(group.getId());
         verify(groupRepository).deleteById(group.getId());
     }
 
@@ -55,7 +55,7 @@ class GroupOfCategoryServiceImplTest {
         GroupOfCategories newGroup = GroupOfCategories.builder().id(1).title("New").build();
 
         given(groupRepository.getById(oldGroup.getId())).willReturn(newGroup);
-        groupService.editGroup(newGroup);
+        groupService.saveOrUpdate(newGroup);
 
         verify(groupRepository).saveAndFlush(newGroup);
     }
@@ -77,7 +77,7 @@ class GroupOfCategoryServiceImplTest {
         groups.add(new GroupOfCategories());
         when(groupRepository.findAll()).thenReturn(groups);
 
-        List<GroupOfCategories> actual = groupService.getAllGroups();
+        List<GroupOfCategories> actual = groupService.getAll();
 
         assertEquals(groups, actual);
         verify(groupRepository).findAll();

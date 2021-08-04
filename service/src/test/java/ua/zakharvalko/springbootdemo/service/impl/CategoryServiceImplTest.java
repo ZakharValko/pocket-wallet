@@ -34,7 +34,7 @@ class CategoryServiceImplTest {
 
         when(categoryRepository.saveAndFlush(category)).thenReturn(category);
 
-        Category added = categoryService.addCategory(category);
+        Category added = categoryService.saveOrUpdate(category);
 
         assertEquals(category.getId(), added.getId());
         verify(categoryRepository).saveAndFlush(category);
@@ -45,7 +45,7 @@ class CategoryServiceImplTest {
         Category category = Category.builder().id(1).build();
 
         when(categoryRepository.getById(category.getId())).thenReturn(category);
-        categoryService.deleteCategory(category.getId());
+        categoryService.delete(category.getId());
         verify(categoryRepository).deleteById(category.getId());
     }
 
@@ -57,7 +57,7 @@ class CategoryServiceImplTest {
         newCategory.setTitle("New");
 
         given(categoryRepository.getById(oldCategory.getId())).willReturn(oldCategory);
-        categoryService.editCategory(newCategory);
+        categoryService.saveOrUpdate(newCategory);
 
         verify(categoryRepository).saveAndFlush(newCategory);
     }
@@ -79,7 +79,7 @@ class CategoryServiceImplTest {
         categories.add(new Category());
         when(categoryRepository.findAll()).thenReturn(categories);
 
-        List<Category> actual = categoryService.getAllCategories();
+        List<Category> actual = categoryService.getAll();
 
         assertEquals(categories, actual);
         verify(categoryRepository).findAll();

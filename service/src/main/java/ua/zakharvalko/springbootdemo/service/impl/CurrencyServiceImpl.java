@@ -15,18 +15,13 @@ public class CurrencyServiceImpl implements CurrencyService {
     private CurrencyRepository currencyRepository;
 
     @Override
-    public Currency addCurrency(Currency currency) {
+    public Currency saveOrUpdate(Currency currency) {
         return currencyRepository.saveAndFlush(currency);
     }
 
     @Override
-    public void deleteCurrency(Integer id) {
+    public void delete(Integer id) {
         currencyRepository.deleteById(id);
-    }
-
-    @Override
-    public Currency editCurrency(Currency currency) {
-        return currencyRepository.saveAndFlush(currency);
     }
 
     @Override
@@ -35,7 +30,7 @@ public class CurrencyServiceImpl implements CurrencyService {
     }
 
     @Override
-    public List<Currency> getAllCurrencies() {
+    public List<Currency> getAll() {
         return currencyRepository.findAll();
     }
 }

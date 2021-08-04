@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ua.zakharvalko.springbootdemo.domain.Account;
 import ua.zakharvalko.springbootdemo.service.AccountService;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class AccountRestController {
         if(account == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.accountService.addAccount(account);
+            this.accountService.saveOrUpdate(account);
             return new ResponseEntity<>(account, HttpStatus.CREATED);
         }
     }
@@ -36,7 +37,7 @@ public class AccountRestController {
         if(account == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            this.accountService.deleteAccount(id);
+            this.accountService.delete(id);
             return new ResponseEntity<>(account, HttpStatus.OK);
         }
     }
@@ -46,7 +47,7 @@ public class AccountRestController {
         if(account == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.accountService.editAccount(account);
+            this.accountService.saveOrUpdate(account);
             return new ResponseEntity<>(account, HttpStatus.OK);
         }
     }
@@ -67,7 +68,7 @@ public class AccountRestController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Account>> getAllAccounts() {
-        List<Account> accounts = this.accountService.getAllAccounts();
+        List<Account> accounts = this.accountService.getAll();
         if(accounts.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

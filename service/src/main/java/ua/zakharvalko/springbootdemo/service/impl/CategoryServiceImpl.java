@@ -15,18 +15,13 @@ public class CategoryServiceImpl implements CategoryService {
     private CategoryRepository categoryRepository;
 
     @Override
-    public Category addCategory(Category category) {
+    public Category saveOrUpdate(Category category) {
         return categoryRepository.saveAndFlush(category);
     }
 
     @Override
-    public void deleteCategory(Integer id) {
+    public void delete(Integer id) {
         categoryRepository.deleteById(id);
-    }
-
-    @Override
-    public Category editCategory(Category category) {
-        return categoryRepository.saveAndFlush(category);
     }
 
     @Override
@@ -35,7 +30,7 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public List<Category> getAllCategories() {
+    public List<Category> getAll() {
         return categoryRepository.findAll();
     }
 }

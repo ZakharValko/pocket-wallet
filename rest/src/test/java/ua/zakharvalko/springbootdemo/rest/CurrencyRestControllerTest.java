@@ -36,7 +36,7 @@ class CurrencyRestControllerTest {
     @Test
     void shouldAddCurrency() throws Exception {
         Currency currency = Currency.builder().id(1).build();
-        when(currencyService.addCurrency(currency)).thenReturn(currency);
+        when(currencyService.saveOrUpdate(currency)).thenReturn(currency);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/currencies/")
                         .content(asJsonString(currency))
@@ -60,7 +60,7 @@ class CurrencyRestControllerTest {
     void shouldEditCurrency() throws Exception {
         Currency oldCurrency = Currency.builder().id(1).title("USD").build();
         Currency newCurrency = Currency.builder().id(1).title("US Dollars").build();
-        when(currencyService.editCurrency(oldCurrency)).thenReturn(newCurrency);
+        when(currencyService.saveOrUpdate(oldCurrency)).thenReturn(newCurrency);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/currencies/")
                 .content(asJsonString(newCurrency))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +85,7 @@ class CurrencyRestControllerTest {
                 Currency.builder().id(1).build(),
                 Currency.builder().id(2).build()
         );
-        when(currencyService.getAllCurrencies()).thenReturn(currencies);
+        when(currencyService.getAll()).thenReturn(currencies);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/currencies/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{}, {}]"));
