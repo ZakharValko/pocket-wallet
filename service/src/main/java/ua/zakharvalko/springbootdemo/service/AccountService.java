@@ -11,5 +11,5 @@ public interface AccountService {
     void delete(Integer id);
     Account getById(Integer id);
     List<Account> getAll();
-    Long getCurrentBalanceOnDate(Integer id, Date date);
+    double getCurrentBalanceOnDate(Integer id, Date date);
 }

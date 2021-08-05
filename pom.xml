@@ -19,7 +19,7 @@
 
     <groupId>ua.zakharvalko</groupId>
     <artifactId>SpringBootDemo</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
     <name>SpringBootDemo</name>
     <description>Demo project for Spring Boot</description>
 
@@ -47,4 +47,17 @@
         </dependency>
 
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>

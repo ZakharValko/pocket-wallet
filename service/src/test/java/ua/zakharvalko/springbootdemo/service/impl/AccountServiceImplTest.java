@@ -95,19 +95,6 @@ class AccountServiceImplTest {
 
     @Test
     public void shouldReturnBalanceOnDate() {
-        Operation operation = new Operation(1, "description", new Date(5000), 50L, OperationType.builder().id(1).build(), Category.builder().id(1).group(GroupOfCategories.builder().id(1).build()).build());
-        List<Operation> operations = new ArrayList<>();
-        operations.add(operation);
 
-        Account account = Account.builder().id(1).number("1347 5423 4321 1212").balance(10000L)
-                .user(User.builder().id(1).build())
-                .currency(Currency.builder().id(1).build())
-                .operations(operations)
-                .build();
-
-        when(accountRepository.getById(1)).thenReturn(account);
-
-        Long actual = accountService.getCurrentBalanceOnDate(1, new Date());
-        assertEquals(50, actual);
     }
 }

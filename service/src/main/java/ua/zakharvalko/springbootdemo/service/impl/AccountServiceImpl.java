@@ -38,7 +38,7 @@ public class AccountServiceImpl implements AccountService{
     }
 
     @Override
-    public Long getCurrentBalanceOnDate(Integer id, Date date) {
+    public double getCurrentBalanceOnDate(Integer id, Date date) {
         List<Operation> operations = accountRepository.getById(id).getOperations();
         Long balance = accountRepository.getById(id).getBalance();
 
@@ -64,6 +64,6 @@ public class AccountServiceImpl implements AccountService{
                 balance -= price;
             }
         }
-        return balance/100;
+        return balance/100.00;
     }
 }

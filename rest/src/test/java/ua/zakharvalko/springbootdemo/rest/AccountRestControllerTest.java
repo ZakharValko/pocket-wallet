@@ -98,7 +98,7 @@ class AccountRestControllerTest {
 
     @Test
     void getCurrentBalanceOnDate() throws Exception {
-        when(accountService.getCurrentBalanceOnDate(1, new Date())).thenReturn(0L);
+        when(accountService.getCurrentBalanceOnDate(1, new Date())).thenReturn(0.00);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/accounts/get-balance-on-date").param("id", "1").param("date", "1970-01-01"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("0.0"));

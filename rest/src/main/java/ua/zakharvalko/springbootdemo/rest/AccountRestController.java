@@ -77,13 +77,13 @@ public class AccountRestController {
     }
 
     @RequestMapping(value = "/get-balance-on-date", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Long> getCurrentBalanceOnDate (@RequestParam("id") Integer id,
+    public ResponseEntity<Double> getCurrentBalanceOnDate (@RequestParam("id") Integer id,
                                                            @RequestParam(value = "date", required = false) @DateTimeFormat(pattern="yyyy-MM-dd") Date date) {
         if(id == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
 
-        Long balance = this.accountService.getCurrentBalanceOnDate(id, date);
+        double balance = this.accountService.getCurrentBalanceOnDate(id, date);
         return new ResponseEntity<>(balance, HttpStatus.OK);
     }
 
