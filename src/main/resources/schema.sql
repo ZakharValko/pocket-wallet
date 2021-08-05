@@ -65,12 +65,15 @@ CREATE TABLE IF NOT EXISTS operation
     id int NOT NULL AUTO_INCREMENT,
     description varchar(100),
     date DATETIME NOT NULL,
-    price bigint NOT NULL,
+    price bigint,
     operation_type_id int,
     category_id int,
     account_id int,
+    transfer_to int,
+    total_for_transfer bigint,
     foreign key (operation_type_id) references operation_type (id),
     foreign key (category_id) references category (id),
     foreign key (account_id) references account (id),
+    foreign key (transfer_to) references account (id),
     PRIMARY KEY (id)
 );

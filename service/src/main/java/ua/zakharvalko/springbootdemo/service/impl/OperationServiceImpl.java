@@ -1,18 +1,23 @@
 package ua.zakharvalko.springbootdemo.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.zakharvalko.springbootdemo.dao.OperationRepository;
 import ua.zakharvalko.springbootdemo.domain.Operation;
+import ua.zakharvalko.springbootdemo.domain.OperationType;
 import ua.zakharvalko.springbootdemo.service.OperationService;
 import ua.zakharvalko.springbootdemo.domain.spec.OperationSpecifications;
 import ua.zakharvalko.springbootdemo.domain.spec.OperationFilter;
 import ua.zakharvalko.springbootdemo.domain.spec.SearchCriteria;
 import ua.zakharvalko.springbootdemo.domain.spec.SearchOperation;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 public class OperationServiceImpl implements OperationService {
 
@@ -40,15 +45,10 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public List<Operation> getOperationsByAccountId(Integer id) {
-        return operationRepository.getOperationByAccount_Id(id);
-    }
-
-    @Override
     public List<Operation> getOperationsByFilter(OperationFilter filter) {
         OperationSpecifications specifications = new OperationSpecifications();
 
-        if(filter.getAccount().getId() != null){
+        if(filter.getAccount() != null && filter.getAccount().getId() != null){
             specifications.add(new SearchCriteria("account", filter.getAccount().getId(), SearchOperation.EQUAL));
         }
         if(filter.getCategory().getId() != null){
@@ -65,16 +65,18 @@ public class OperationServiceImpl implements OperationService {
         }
         if(filter.getFrom() != null){
             specifications.add(new SearchCriteria("date", filter.getFrom(), SearchOperation.AFTER));
+
         }
-        if(filter.getFrom() != null){
+        if(filter.getTo() != null){
             specifications.add(new SearchCriteria("date", filter.getTo(), SearchOperation.BEFORE));
+
         }
         return operationRepository.findAll(specifications);
     }
 
     @Override
     public double getTotalExpensesByFilter(OperationFilter filter) {
-        if(filter.getOperationType().getId().equals(1) || filter.getOperationType().getId().equals(3)) {
+        if (filter.getOperationType().getId().equals(1) || filter.getOperationType().getId().equals(3)) {
             List<Operation> filteredOperations = getOperationsByFilter(filter);
             long totalInCoins = filteredOperations.stream()
                     .map(Operation::getPrice)
@@ -87,8 +89,28 @@ public class OperationServiceImpl implements OperationService {
     }
 
     @Override
-    public double getCashFlow(OperationFilter filter) {
-        return 0;
+    public List<Operation> transferBetweenAccounts(Operation operation) {
+        List<Operation> operations = new ArrayList<>();
+        if(operation.getOperationType().getId().equals(1) && operation.getTransferTo() != null){
+            if(operation.getTotalForTransfer() == null) {
+                log.info("Total for transfer is null");
+            } else {
+                operationRepository.saveAndFlush(operation);
+                operations.add(operation);
+                Operation back = Operation.builder()
+                        .description("Transfer from: " + operation.getAccount().getId())
+                        .date(new Date())
+                        .price(operation.getTotalForTransfer())
+                        .account(operation.getTransferTo())
+                        .operationType(OperationType.builder().id(2).build())
+                        .build();
+                operationRepository.saveAndFlush(back);
+                operations.add(back);
+            }
+        } else {
+            log.info("Incorrect 'type of operation' or 'transfer account id' is null");
+        }
+        return operations;
     }
 
 }

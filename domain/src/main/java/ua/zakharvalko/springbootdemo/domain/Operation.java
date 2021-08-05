@@ -2,6 +2,7 @@ package ua.zakharvalko.springbootdemo.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
+import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -41,6 +42,13 @@ public class Operation {
     @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
+
+    @ManyToOne
+    @JoinColumn(name = "transfer_to", referencedColumnName = "id")
+    private Account transferTo;
+
+    @Column(name = "total_for_transfer")
+    private Long totalForTransfer;
 
     public Operation() {
     }

@@ -12,13 +12,9 @@ public interface OperationService {
     void delete(Integer id);
     Operation getById(Integer id);
     List<Operation> getAll();
-    List<Operation> getOperationsByAccountId(Integer id);
     List<Operation> getOperationsByFilter(OperationFilter filter);
     double getTotalExpensesByFilter(OperationFilter filter);
+    List<Operation> transferBetweenAccounts(Operation operation);
 
     //double getCashFlow(OperationFilter filter);
-
-    //List<Operation> transferBetweenAccounts(Operation operation, Integer accountId);
-
-
 }

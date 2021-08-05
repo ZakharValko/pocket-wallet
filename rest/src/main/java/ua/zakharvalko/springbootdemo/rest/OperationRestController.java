@@ -99,9 +99,13 @@ public class OperationRestController {
         }
     }
 
-    @RequestMapping(value = "/by-account-id",  method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Operation>> getOperationsByAccountId(@RequestParam Integer id) {
-        List<Operation> operations = this.operationService.getOperationsByAccountId(id);
-        return new ResponseEntity<>(operations, HttpStatus.OK);
+    @RequestMapping(value = "/transfer-btw-accounts", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<Operation>> transferBetweenAccounts(@RequestBody Operation operation) {
+        if(operation == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            List<Operation> operations = operationService.transferBetweenAccounts(operation);
+            return new ResponseEntity<>(operations, HttpStatus.OK);
+        }
     }
 }
