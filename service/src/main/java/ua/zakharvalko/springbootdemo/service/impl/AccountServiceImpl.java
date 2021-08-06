@@ -1,21 +1,30 @@
 package ua.zakharvalko.springbootdemo.service.impl;
 
+import lombok.extern.log4j.Log4j;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ua.zakharvalko.springbootdemo.dao.AccountRepository;
+import ua.zakharvalko.springbootdemo.dao.OperationRepository;
 import ua.zakharvalko.springbootdemo.domain.Account;
 import ua.zakharvalko.springbootdemo.domain.Operation;
+import ua.zakharvalko.springbootdemo.domain.spec.OperationSpecifications;
+import ua.zakharvalko.springbootdemo.domain.spec.SearchCriteria;
+import ua.zakharvalko.springbootdemo.domain.spec.SearchOperation;
 import ua.zakharvalko.springbootdemo.service.AccountService;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class AccountServiceImpl implements AccountService{
 
     @Autowired
     private AccountRepository accountRepository;
+
+    @Autowired
+    private OperationRepository operationRepository;
 
     @Override
     public Account saveOrUpdate(Account account) {
@@ -39,21 +48,18 @@ public class AccountServiceImpl implements AccountService{
 
     @Override
     public double getCurrentBalanceOnDate(Integer id, Date date) {
-        List<Operation> operations = accountRepository.getById(id).getOperations();
-        Long balance = accountRepository.getById(id).getBalance();
-
-
         if(date == null) {
-            Date now = new Date();
-            date = now;
+            date = new Date();
         }
 
-        Date finalDate = date;
-        List<Operation> operationsByDate = operations.stream()
-                .filter(operation -> operation.getDate().before(finalDate))
-                .collect(Collectors.toList());
+        OperationSpecifications specifications = new OperationSpecifications();
+        specifications.add(new SearchCriteria("account", id, SearchOperation.EQUAL));
+        specifications.add(new SearchCriteria("date", date, SearchOperation.BEFORE));
 
-        for (Operation operation : operationsByDate) {
+        long balance = accountRepository.getById(id).getBalance();
+        List<Operation> operations = operationRepository.findAll(specifications);
+
+        for (Operation operation : operations) {
             Long price = operation.getPrice();
             Integer operationType = operation.getOperationType().getId();
             if (operationType == 1) {
