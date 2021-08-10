@@ -18,7 +18,8 @@ import ua.zakharvalko.springbootdemo.service.RoleService;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,6 +46,9 @@ class RoleRestControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));
+
+        verify(roleService).saveOrUpdate(any(Role.class));
+        verifyNoMoreInteractions(roleService);
     }
 
     @Test
@@ -54,6 +58,10 @@ class RoleRestControllerTest {
         mockMvc.perform( MockMvcRequestBuilders.delete("/api/roles/{id}", 1) )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
+
+        verify(roleService).getById(1);
+        verify(roleService).delete(1);
+        verifyNoMoreInteractions(roleService);
     }
 
     @Test
@@ -68,6 +76,9 @@ class RoleRestControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
+
+        verify(roleService).saveOrUpdate(any(Role.class));
+        verifyNoMoreInteractions(roleService);
     }
 
     @Test
@@ -77,6 +88,9 @@ class RoleRestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/roles/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
+
+        verify(roleService).getById(1);
+        verifyNoMoreInteractions(roleService);
     }
 
     @Test
@@ -89,6 +103,9 @@ class RoleRestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/roles/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{}, {}]"));
+
+        verify(roleService).getAll();
+        verifyNoMoreInteractions(roleService);
     }
 
     public static String asJsonString(final Object obj) {

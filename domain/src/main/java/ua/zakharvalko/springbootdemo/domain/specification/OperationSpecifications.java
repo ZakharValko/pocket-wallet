@@ -1,4 +1,4 @@
-package ua.zakharvalko.springbootdemo.domain.spec;
+package ua.zakharvalko.springbootdemo.domain.specification;
 
 import org.springframework.data.jpa.domain.Specification;
 import ua.zakharvalko.springbootdemo.domain.Operation;

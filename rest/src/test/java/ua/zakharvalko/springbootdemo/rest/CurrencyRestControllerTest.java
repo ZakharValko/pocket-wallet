@@ -18,7 +18,7 @@ import ua.zakharvalko.springbootdemo.service.CurrencyService;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,6 +45,9 @@ class CurrencyRestControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));
+
+        verify(currencyService).saveOrUpdate(any(Currency.class));
+        verifyNoMoreInteractions(currencyService);
     }
 
     @Test
@@ -54,6 +57,10 @@ class CurrencyRestControllerTest {
         mockMvc.perform( MockMvcRequestBuilders.delete("/api/currencies/{id}", 1) )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
+
+        verify(currencyService).getById(1);
+        verify(currencyService).delete(1);
+        verifyNoMoreInteractions(currencyService);
     }
 
     @Test
@@ -68,6 +75,9 @@ class CurrencyRestControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
+
+        verify(currencyService).saveOrUpdate(any(Currency.class));
+        verifyNoMoreInteractions(currencyService);
     }
 
     @Test
@@ -77,6 +87,9 @@ class CurrencyRestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/currencies/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
+
+        verify(currencyService).getById(1);
+        verifyNoMoreInteractions(currencyService);
     }
 
     @Test
@@ -89,6 +102,9 @@ class CurrencyRestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/currencies/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{}, {}]"));
+
+        verify(currencyService).getAll();
+        verifyNoMoreInteractions(currencyService);
     }
 
     public static String asJsonString(final Object obj) {

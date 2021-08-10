@@ -18,7 +18,8 @@ import ua.zakharvalko.springbootdemo.service.UserService;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,7 +45,10 @@ class UserRestControllerTest {
                         .accept(MediaType.APPLICATION_JSON_VALUE)
         )
                 .andExpect(status().isCreated())
-                .andExpect(content().json("{}"));;
+                .andExpect(content().json("{}"));
+
+        verify(userService).saveOrUpdate(any(User.class));
+        verifyNoMoreInteractions(userService);
     }
 
     @Test
@@ -53,7 +57,10 @@ class UserRestControllerTest {
         when(userService.getById(1)).thenReturn(user);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/{id}", 1))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{}"));;
+                .andExpect(content().json("{}"));
+
+        verify(userService).getById(1);
+        verifyNoMoreInteractions(userService);
     }
 
     @Test
@@ -67,7 +74,10 @@ class UserRestControllerTest {
                 .accept(MediaType.APPLICATION_JSON_VALUE)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().json("{}, {}"));;
+                .andExpect(content().json("{}, {}"));
+
+        verify(userService).saveOrUpdate(any(User.class));
+        verifyNoMoreInteractions(userService);
     }
 
     @Test
@@ -76,7 +86,11 @@ class UserRestControllerTest {
         when(userService.getById(1)).thenReturn(user);
         mockMvc.perform( MockMvcRequestBuilders.delete("/api/users/{id}", 1) )
                 .andExpect(status().isOk())
-                .andExpect(content().json("{}"));;
+                .andExpect(content().json("{}"));
+
+        verify(userService).getById(1);
+        verify(userService).delete(1);
+        verifyNoMoreInteractions(userService);
     }
 
     @Test
@@ -88,7 +102,10 @@ class UserRestControllerTest {
         when(userService.getAll()).thenReturn(users);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{}, {}]"));;
+                .andExpect(content().json("[{}, {}]"));
+
+        verify(userService).getAll();
+        verifyNoMoreInteractions(userService);
     }
 
     public static String asJsonString(final Object obj) {

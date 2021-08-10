@@ -12,13 +12,15 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
+import ua.zakharvalko.springbootdemo.domain.Account;
 import ua.zakharvalko.springbootdemo.domain.Category;
 import ua.zakharvalko.springbootdemo.service.CategoryService;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,7 +46,10 @@ class CategoryRestControllerTest {
                         .accept(MediaType.APPLICATION_JSON_VALUE)
         )
                 .andExpect(status().isCreated())
-                .andExpect(content().json("{}"));;
+                .andExpect(content().json("{}"));
+
+        verify(categoryService).saveOrUpdate(any(Category.class));
+        verifyNoMoreInteractions(categoryService);
 
     }
 
@@ -54,7 +59,11 @@ class CategoryRestControllerTest {
         when(categoryService.getById(1)).thenReturn(category);
         mockMvc.perform( MockMvcRequestBuilders.delete("/api/categories/{id}", 1) )
                 .andExpect(status().isOk())
-                .andExpect(content().json("{}"));;
+                .andExpect(content().json("{}"));
+
+        verify(categoryService).getById(1);
+        verify(categoryService).delete(1);
+        verifyNoMoreInteractions(categoryService);
     }
 
     @Test
@@ -69,6 +78,9 @@ class CategoryRestControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
+
+        verify(categoryService).saveOrUpdate(any(Category.class));
+        verifyNoMoreInteractions(categoryService);
     }
 
     @Test
@@ -77,7 +89,10 @@ class CategoryRestControllerTest {
         when(categoryService.getById(1)).thenReturn(category);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/{id}", 1))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{}"));;
+                .andExpect(content().json("{}"));
+
+        verify(categoryService).getById(1);
+        verifyNoMoreInteractions(categoryService);
     }
 
     @Test
@@ -89,7 +104,10 @@ class CategoryRestControllerTest {
         when(categoryService.getAll()).thenReturn(categories);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/categories/"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{}, {}]"));;
+                .andExpect(content().json("[{}, {}]"));
+
+        verify(categoryService).getAll();
+        verifyNoMoreInteractions(categoryService);
     }
 
     public static String asJsonString(final Object obj) {

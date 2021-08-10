@@ -33,7 +33,7 @@ CREATE TABLE IF NOT EXISTS category
 (
     id int NOT NULL AUTO_INCREMENT,
     title varchar(20) NOT NULL,
-    group_id int,
+    group_id int NOT NULL,
     foreign key (group_id) references group_of_categories (id),
     PRIMARY KEY (id)
 );
@@ -43,7 +43,7 @@ CREATE TABLE IF NOT EXISTS user
     id int NOT NULL AUTO_INCREMENT,
     first_name varchar(20) NOT NULL,
     second_name varchar(20) NOT NULL,
-    role_id int,
+    role_id int NOT NULL,
     foreign key (role_id) references role (id),
     PRIMARY KEY (id)
 );
@@ -53,8 +53,8 @@ CREATE TABLE IF NOT EXISTS account
     id int NOT NULL AUTO_INCREMENT,
     number varchar(19) NOT NULL,
     balance bigint NOT NULL DEFAULT 0.00,
-    user_id int,
-    currency_id int,
+    user_id int NOT NULL,
+    currency_id int NOT NULL,
     foreign key (currency_id) references currency (id),
     foreign key (user_id) references user (id),
     PRIMARY KEY (id)

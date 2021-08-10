@@ -1,5 +1,7 @@
 package ua.zakharvalko.springbootdemo.service.impl;
 
+import org.junit.Assert;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,14 +15,19 @@ import ua.zakharvalko.springbootdemo.domain.Currency;
 import ua.zakharvalko.springbootdemo.domain.GroupOfCategories;
 import ua.zakharvalko.springbootdemo.domain.Operation;
 import ua.zakharvalko.springbootdemo.domain.OperationType;
+import ua.zakharvalko.springbootdemo.domain.specification.OperationFilter;
+import ua.zakharvalko.springbootdemo.domain.specification.OperationSpecifications;
 import ua.zakharvalko.springbootdemo.service.OperationService;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -42,7 +49,7 @@ class OperationServiceImplTest {
                 .date(new Date(5000))
                 .price(200L)
                 .account(Account.builder().id(1).currency(Currency.builder().id(1).build()).build())
-                .operationType(OperationType.builder().id(1).build())
+                .operationType(OperationType.builder().id(2).build())
                 .category(Category.builder().id(1).group(GroupOfCategories.builder().id(1).build()).build())
                 .build();
 
@@ -105,21 +112,95 @@ class OperationServiceImplTest {
 
     @Test
     public void shouldReturnFilteredOperations() {
+        List<Operation> operations = new ArrayList<>();
+        operations.add(Operation.builder().id(1)
+                .category(Category.builder().id(2).build())
+                .operationType(OperationType.builder().id(1).build())
+                .date(parseDate("2021-05-05T13:19:49"))
+                .account(Account.builder().currency(Currency.builder().id(1).build()).build())
+                .build());
+        operations.add(Operation.builder().id(2)
+                .category(Category.builder().id(1).build())
+                .operationType(OperationType.builder().id(1).build())
+                .date(parseDate("2021-05-08T13:19:49"))
+                .account(Account.builder().currency(Currency.builder().id(1).build()).build())
+                .build());
+        operations.add(Operation.builder().id(3)
+                .category(Category.builder().id(1).build())
+                .operationType(OperationType.builder().id(1).build())
+                .date(parseDate("2021-05-10T13:19:49"))
+                .account(Account.builder().currency(Currency.builder().id(1).build()).build())
+                .build());
 
+        OperationFilter filter = new OperationFilter();
+
+        when(operationRepository.findAll(any(OperationSpecifications.class))).thenReturn(operations);
+        List<Operation> actual = operationService.getOperationsByFilter(filter);
+        assertEquals(operations, actual);
     }
 
     @Test
     public void shouldReturnExpensesByFilteredOperations() {
+        List<Operation> operations = new ArrayList<>();
+        operations.add(Operation.builder().id(1)
+                .category(Category.builder().id(2).build())
+                .operationType(OperationType.builder().id(1).build())
+                .totalForTransfer(1000L)
+                .date(parseDate("2021-05-05T13:19:49"))
+                .account(Account.builder().currency(Currency.builder().id(1).build()).build())
+                .build());
+        operations.add(Operation.builder().id(2)
+                .category(Category.builder().id(1).build())
+                .operationType(OperationType.builder().id(1).build())
+                .totalForTransfer(1000L)
+                .date(parseDate("2021-05-08T13:19:49"))
+                .account(Account.builder().currency(Currency.builder().id(1).build()).build())
+                .build());
 
-    }
+        OperationFilter filter = new OperationFilter();
+        filter.setOperationType(OperationType.builder().id(1).build());
 
-    @Test
-    public void shouldReturnCashFlowByInterval() {
+        when(operationRepository.findAll(any(OperationSpecifications.class))).thenReturn(operations);
+        double actual = operationService.getTotalExpensesByFilter(filter);
+        assertEquals(20.0, actual);
 
     }
 
     @Test
     void shouldMakeTransferBetweenAccounts() {
+        Operation operation = Operation.builder()
+                .id(1)
+                .totalForTransfer(1000L)
+                .operationType(OperationType.builder().id(1).build())
+                .account(Account.builder().id(1).build())
+                .transferTo(Account.builder().id(2).build())
+                .build();
 
+        Operation back = Operation.builder()
+                .description("Transfer from: " + operation.getAccount().getId())
+                .date(new Date())
+                .price(operation.getTotalForTransfer())
+                .account(operation.getTransferTo())
+                .operationType(OperationType.builder().id(2).build())
+                .build();
+
+        List<Operation> operations = new ArrayList<>();
+        when(operationRepository.saveAndFlush(operation)).thenReturn(operation);
+        when(operationRepository.saveAndFlush(back)).thenReturn(back);
+        operations.add(operation);
+        operations.add(back);
+
+        List<Operation> actual = operationService.transferBetweenAccounts(operation);
+
+        assertEquals(operations, actual);
+        verify(operationRepository).saveAndFlush(operation);
+    }
+
+    public static Date parseDate(String date) {
+        try {
+            return new SimpleDateFormat("yyyy-MM-dd").parse(date);
+        } catch (ParseException e) {
+            return null;
+        }
     }
 }

@@ -1,4 +1,4 @@
-package ua.zakharvalko.springbootdemo.domain.spec;
+package ua.zakharvalko.springbootdemo.domain.specification;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

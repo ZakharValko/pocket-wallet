@@ -7,12 +7,11 @@ import ua.zakharvalko.springbootdemo.dao.OperationRepository;
 import ua.zakharvalko.springbootdemo.domain.Operation;
 import ua.zakharvalko.springbootdemo.domain.OperationType;
 import ua.zakharvalko.springbootdemo.service.OperationService;
-import ua.zakharvalko.springbootdemo.domain.spec.OperationSpecifications;
-import ua.zakharvalko.springbootdemo.domain.spec.OperationFilter;
-import ua.zakharvalko.springbootdemo.domain.spec.SearchCriteria;
-import ua.zakharvalko.springbootdemo.domain.spec.SearchOperation;
+import ua.zakharvalko.springbootdemo.domain.specification.OperationSpecifications;
+import ua.zakharvalko.springbootdemo.domain.specification.OperationFilter;
+import ua.zakharvalko.springbootdemo.domain.specification.SearchCriteria;
+import ua.zakharvalko.springbootdemo.domain.specification.SearchOperation;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,7 +25,10 @@ public class OperationServiceImpl implements OperationService {
 
     @Override
     public Operation saveOrUpdate(Operation operation) {
-        return operationRepository.saveAndFlush(operation);
+        if (operation.getOperationType().getId().equals(1)) {
+            transferBetweenAccounts(operation);
+            }
+            return operationRepository.saveAndFlush(operation);
     }
 
     @Override
@@ -51,16 +53,16 @@ public class OperationServiceImpl implements OperationService {
         if(filter.getAccount() != null && filter.getAccount().getId() != null){
             specifications.add(new SearchCriteria("account", filter.getAccount().getId(), SearchOperation.EQUAL));
         }
-        if(filter.getCategory().getId() != null){
+        if(filter.getCategory() != null && filter.getCategory().getId() != null){
             specifications.add(new SearchCriteria("category", filter.getCategory().getId(), SearchOperation.EQUAL));
         }
-        if(filter.getOperationType().getId() != null){
+        if(filter.getOperationType() != null && filter.getOperationType().getId() != null){
             specifications.add(new SearchCriteria("operationType", filter.getOperationType().getId(), SearchOperation.EQUAL));
         }
-        if(filter.getCategory().getGroup().getId() != null){
+        if(filter.getCategory() != null && filter.getCategory().getGroup() != null && filter.getCategory().getGroup().getId() != null){
             specifications.add(new SearchCriteria("category/group", filter.getCategory().getGroup().getId(), SearchOperation.JOIN));
         }
-        if(filter.getAccount().getCurrency().getId() != null){
+        if(filter.getAccount() != null && filter.getAccount().getCurrency() != null && filter.getAccount().getCurrency().getId() != null){
             specifications.add(new SearchCriteria("account/currency", filter.getAccount().getCurrency().getId(), SearchOperation.JOIN));
         }
         if(filter.getFrom() != null){
@@ -78,10 +80,14 @@ public class OperationServiceImpl implements OperationService {
     public double getTotalExpensesByFilter(OperationFilter filter) {
         if (filter.getOperationType().getId().equals(1) || filter.getOperationType().getId().equals(3)) {
             List<Operation> filteredOperations = getOperationsByFilter(filter);
-            long totalInCoins = filteredOperations.stream()
-                    .map(Operation::getPrice)
-                    .mapToLong(o -> o)
-                    .sum();
+            long totalInCoins = 0L;
+            for(Operation operation : filteredOperations){
+                if(operation.getOperationType().getId().equals(1)){
+                    totalInCoins += operation.getTotalForTransfer();
+                } else if(operation.getOperationType().getId().equals(3)) {
+                    totalInCoins += operation.getPrice();
+                }
+            }
             return totalInCoins / 100.00;
         } else {
             throw new IllegalArgumentException("Incorrect type operation in filter. Allowed only 'Expenses' and 'Transfers'");

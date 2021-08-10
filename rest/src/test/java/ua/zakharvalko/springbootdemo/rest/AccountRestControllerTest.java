@@ -13,15 +13,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.bind.annotation.ResponseBody;
 import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
 import ua.zakharvalko.springbootdemo.domain.Account;
+import ua.zakharvalko.springbootdemo.domain.Operation;
 import ua.zakharvalko.springbootdemo.service.AccountService;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,6 +53,9 @@ class AccountRestControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));
+
+        verify(accountService).saveOrUpdate(any(Account.class));
+        verifyNoMoreInteractions(accountService);
     }
 
 
@@ -58,6 +66,10 @@ class AccountRestControllerTest {
         mockMvc.perform( MockMvcRequestBuilders.delete("/api/accounts/{id}", 1) )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
+
+        verify(accountService).getById(1);
+        verify(accountService).delete(1);
+        verifyNoMoreInteractions(accountService);
     }
 
     @Test
@@ -72,15 +84,21 @@ class AccountRestControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
+
+        verify(accountService).saveOrUpdate(any(Account.class));
+        verifyNoMoreInteractions(accountService);
     }
 
     @Test
     void shouldReturnAccountById() throws Exception {
         Account account = Account.builder().id(1).build();
         when(accountService.getById(1)).thenReturn(account);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/accounts/{id}", 1))
+        mockMvc.perform(get("/api/accounts/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
+
+        verify(accountService).getById(1);
+        verifyNoMoreInteractions(accountService);
     }
 
     @Test
@@ -90,18 +108,27 @@ class AccountRestControllerTest {
                 Account.builder().id(2).build()
         );
         when(accountService.getAll()).thenReturn(accounts);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/accounts/"))
+        mockMvc.perform(get("/api/accounts/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{}, {}]"));
 
+        verify(accountService).getAll();
+        verifyNoMoreInteractions(accountService);
     }
 
     @Test
     void getCurrentBalanceOnDate() throws Exception {
-        when(accountService.getCurrentBalanceOnDate(1, new Date())).thenReturn(0.00);
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/accounts/get-balance-on-date").param("id", "1").param("date", "1970-01-01"))
+        double balance = 10000L;
+
+        when(accountService.getCurrentBalanceOnDate(any(), any())).thenReturn(balance/100);
+
+        mockMvc.perform(get("/api/accounts/get-balance-on-date?id=1")
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string("0.0"));
+                .andExpect(content().string(String.valueOf(balance/100)));
+
+        verify(accountService).getCurrentBalanceOnDate(any(), any());
+        verifyNoMoreInteractions(accountService);
 
     }
 

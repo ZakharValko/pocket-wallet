@@ -6,15 +6,13 @@ import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.zakharvalko.springbootdemo.dao.AccountRepository;
 import ua.zakharvalko.springbootdemo.dao.OperationRepository;
 import ua.zakharvalko.springbootdemo.domain.Account;
 import ua.zakharvalko.springbootdemo.domain.Operation;
 import ua.zakharvalko.springbootdemo.domain.OperationType;
-import ua.zakharvalko.springbootdemo.domain.spec.OperationSpecifications;
+import ua.zakharvalko.springbootdemo.domain.specification.OperationSpecifications;
 import ua.zakharvalko.springbootdemo.service.AccountService;
 
 import java.text.ParseException;
@@ -101,11 +99,11 @@ class AccountServiceImplTest {
     }
 
     @Test
-    public void shouldReturnBalanceOnDate() {
-        Account account = Account.builder().id(1).balance(10000L).build();
+    public void shouldReturnCurrentBalanceOnDate() {
+        Account account = Account.builder().id(1).balance(1000L).build();
         List<Operation> operations = new ArrayList<>();
-        operations.add(Operation.builder().account(account).operationType(OperationType.builder().id(1).build()).price(1000L).date(parseDate("2021-05-05T13:19:49")).build());
-        operations.add(Operation.builder().account(account).operationType(OperationType.builder().id(2).build()).price(2000L).date(parseDate("2021-05-05T13:19:49")).build());
+        operations.add(Operation.builder().account(account).operationType(OperationType.builder().id(2).build()).price(1000L).date(parseDate("2021-05-05T13:19:49")).build());
+        operations.add(Operation.builder().account(account).operationType(OperationType.builder().id(3).build()).price(1500L).date(parseDate("2021-05-05T13:19:49")).build());
         account.setOperations(operations);
 
         when(operationRepository.findAll(ArgumentMatchers.any(OperationSpecifications.class))).thenReturn(operations);
@@ -113,7 +111,8 @@ class AccountServiceImplTest {
 
         double balance = accountService.getCurrentBalanceOnDate(1, new Date());
 
-        assertThat(balance).isEqualTo(110.00);
+        assertThat(balance).isEqualTo(5.00);
+        verify(accountRepository).getById(1);
     }
 
     public static Date parseDate(String date) {

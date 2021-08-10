@@ -18,7 +18,8 @@ import ua.zakharvalko.springbootdemo.service.GroupOfCategoryService;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -44,7 +45,10 @@ class GroupCategoryRestControllerTest {
                         .accept(MediaType.APPLICATION_JSON_VALUE)
         )
                 .andExpect(status().isCreated())
-                .andExpect(content().json("{}, {}"));;
+                .andExpect(content().json("{}, {}"));
+
+        verify(groupService).saveOrUpdate(any(GroupOfCategories.class));
+        verifyNoMoreInteractions(groupService);
     }
 
     @Test
@@ -53,7 +57,11 @@ class GroupCategoryRestControllerTest {
         when(groupService.getById(1)).thenReturn(group);
         mockMvc.perform( MockMvcRequestBuilders.delete("/api/groups-of-categories/{id}", 1) )
                 .andExpect(status().isOk())
-                .andExpect(content().json("{}"));;
+                .andExpect(content().json("{}"));
+
+        verify(groupService).getById(1);
+        verify(groupService).delete(1);
+        verifyNoMoreInteractions(groupService);
     }
 
     @Test
@@ -68,6 +76,9 @@ class GroupCategoryRestControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
+
+        verify(groupService).saveOrUpdate(any(GroupOfCategories.class));
+        verifyNoMoreInteractions(groupService);
     }
 
     @Test
@@ -76,7 +87,10 @@ class GroupCategoryRestControllerTest {
         when(groupService.getById(1)).thenReturn(group);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/groups-of-categories/{id}", 1))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{}"));;
+                .andExpect(content().json("{}"));
+
+        verify(groupService).getById(1);
+        verifyNoMoreInteractions(groupService);
     }
 
     @Test
@@ -88,7 +102,10 @@ class GroupCategoryRestControllerTest {
         when(groupService.getAll()).thenReturn(groups);
         mockMvc.perform(MockMvcRequestBuilders.get("/api/groups-of-categories/"))
                 .andExpect(status().isOk())
-                .andExpect(content().json("[{}, {}]"));;
+                .andExpect(content().json("[{}, {}]"));
+
+        verify(groupService).getAll();
+        verifyNoMoreInteractions(groupService);
     }
 
     public static String asJsonString(final Object obj) {

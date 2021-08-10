@@ -9,7 +9,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ua.zakharvalko.springbootdemo.domain.Operation;
 import ua.zakharvalko.springbootdemo.service.OperationService;
-import ua.zakharvalko.springbootdemo.domain.spec.OperationFilter;
+import ua.zakharvalko.springbootdemo.domain.specification.OperationFilter;
 
 import java.util.List;
 

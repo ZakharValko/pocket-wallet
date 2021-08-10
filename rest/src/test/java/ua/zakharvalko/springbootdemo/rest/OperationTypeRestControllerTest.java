@@ -18,7 +18,8 @@ import ua.zakharvalko.springbootdemo.service.OperationTypeService;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -45,6 +46,9 @@ class OperationTypeRestControllerTest {
         )
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));
+
+        verify(typeService).saveOrUpdate(any(OperationType.class));
+        verifyNoMoreInteractions(typeService);
     }
 
     @Test
@@ -54,6 +58,10 @@ class OperationTypeRestControllerTest {
         mockMvc.perform( MockMvcRequestBuilders.delete("/api/operation-types/{id}", 1) )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
+
+        verify(typeService).getById(1);
+        verify(typeService).delete(1);
+        verifyNoMoreInteractions(typeService);
     }
 
     @Test
@@ -68,6 +76,9 @@ class OperationTypeRestControllerTest {
         )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
+
+        verify(typeService).saveOrUpdate(any(OperationType.class));
+        verifyNoMoreInteractions(typeService);
     }
 
     @Test
@@ -77,6 +88,9 @@ class OperationTypeRestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/operation-types/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
+
+        verify(typeService).getById(1);
+        verifyNoMoreInteractions(typeService);
     }
 
     @Test
@@ -89,6 +103,9 @@ class OperationTypeRestControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/operation-types/"))
                 .andExpect(status().isOk())
                 .andExpect(content().json("[{}, {}]"));
+
+        verify(typeService).getAll();
+        verifyNoMoreInteractions(typeService);
     }
 
     public static String asJsonString(final Object obj) {
