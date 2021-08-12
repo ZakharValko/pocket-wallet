@@ -3,7 +3,10 @@ INSERT IGNORE operation_type VALUES (1, 'Transfer'), (2, 'Income'), (3, 'Expense
 INSERT IGNORE currency VALUES (1, 'USD'), (2, 'UAH');
 INSERT IGNORE group_of_categories VALUES (1, 'Food&Drinks'), (2, 'Shopping'), (3, 'Income');
 INSERT IGNORE category VALUES (1, 'Groceries', 1), (2, 'Clothes&Shoes', 2), (3, 'Salary', 3), (4, 'Gifts', 3), (5, 'Caffe and bars', 1);
-INSERT IGNORE user VALUES (1, 'Alex', 'Smith', 2), (2, 'John', 'Allen', 2), (3, 'Felix', 'Miller', 2);
+INSERT IGNORE user (id, first_name, second_name, role_id)
+VALUES (1, 'Alex', 'Smith', 2),
+       (2, 'John', 'Allen', 2),
+       (3, 'Felix', 'Miller', 2);
 INSERT IGNORE account (id, balance, number, currency_id, user_id)
 VALUES (1, 2000, '5457 2121 0323 1111', 1, 1),
        (2, 1500, '5457 2121 0323 2222', 2, 1),

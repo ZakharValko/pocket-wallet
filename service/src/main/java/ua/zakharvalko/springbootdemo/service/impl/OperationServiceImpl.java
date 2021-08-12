@@ -6,11 +6,11 @@ import org.springframework.stereotype.Service;
 import ua.zakharvalko.springbootdemo.dao.OperationRepository;
 import ua.zakharvalko.springbootdemo.domain.Operation;
 import ua.zakharvalko.springbootdemo.domain.OperationType;
-import ua.zakharvalko.springbootdemo.service.OperationService;
-import ua.zakharvalko.springbootdemo.domain.specification.OperationSpecifications;
 import ua.zakharvalko.springbootdemo.domain.specification.OperationFilter;
+import ua.zakharvalko.springbootdemo.domain.specification.OperationSpecifications;
 import ua.zakharvalko.springbootdemo.domain.specification.SearchCriteria;
 import ua.zakharvalko.springbootdemo.domain.specification.SearchOperation;
+import ua.zakharvalko.springbootdemo.service.OperationService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -18,10 +18,14 @@ import java.util.List;
 
 @Slf4j
 @Service
-public class OperationServiceImpl implements OperationService {
+public class OperationServiceImpl extends AbstractServiceImpl<Operation, OperationRepository> implements OperationService {
 
     @Autowired
     private OperationRepository operationRepository;
+
+    public OperationServiceImpl(OperationRepository repository) {
+        super(repository);
+    }
 
     @Override
     public Operation saveOrUpdate(Operation operation) {
@@ -29,21 +33,6 @@ public class OperationServiceImpl implements OperationService {
             transferBetweenAccounts(operation);
             }
             return operationRepository.saveAndFlush(operation);
-    }
-
-    @Override
-    public void delete(Integer id) {
-        operationRepository.deleteById(id);
-    }
-
-    @Override
-    public Operation getById(Integer id) {
-        return operationRepository.getById(id);
-    }
-
-    @Override
-    public List<Operation> getAll() {
-        return operationRepository.findAll();
     }
 
     @Override

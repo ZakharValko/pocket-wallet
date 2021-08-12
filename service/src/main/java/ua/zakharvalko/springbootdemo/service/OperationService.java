@@ -5,7 +5,7 @@ import ua.zakharvalko.springbootdemo.domain.specification.OperationFilter;
 
 import java.util.List;
 
-public interface OperationService extends AbstractCrudService<Operation> {
+public interface OperationService extends AbstractService<Operation>{
 
     List<Operation> getOperationsByFilter(OperationFilter filter);
     double getTotalExpensesByFilter(OperationFilter filter);

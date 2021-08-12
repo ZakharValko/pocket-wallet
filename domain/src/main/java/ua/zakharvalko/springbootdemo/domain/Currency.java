@@ -2,7 +2,6 @@ package ua.zakharvalko.springbootdemo.domain;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.*;
-import ua.zakharvalko.springbootdemo.domain.Account;
 
 import javax.persistence.*;
 import java.util.List;

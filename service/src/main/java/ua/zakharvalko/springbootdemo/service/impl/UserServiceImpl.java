@@ -6,31 +6,30 @@ import ua.zakharvalko.springbootdemo.dao.UserRepository;
 import ua.zakharvalko.springbootdemo.domain.User;
 import ua.zakharvalko.springbootdemo.service.UserService;
 
-import java.util.List;
-
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AbstractServiceImpl<User, UserRepository> implements UserService {
 
     @Autowired
     private UserRepository userRepository;
 
-    @Override
-    public User saveOrUpdate(User user) {
-        return userRepository.saveAndFlush(user);
+    public UserServiceImpl(UserRepository repository) {
+        super(repository);
     }
 
-    @Override
-    public void delete(Integer id) {
-        userRepository.deleteById(id);
-    }
+
+/*    private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     @Override
-    public User getById(Integer id) {
-        return userRepository.getById(id);
-    }
+    public UserDetails loadUserByUsername(String s) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(s);
+        if(user == null) {
+            throw new UsernameNotFoundException("User not found");
+        }
 
-    @Override
-    public List<User> getAll() {
-        return userRepository.findAll();
-    }
+        return org.springframework.security.core.userdetails.User.builder()
+                .username(user.getUsername())
+                .password(passwordEncoder.encode(user.getPassword()))
+                .roles(user.getRole().getTitle())
+                .build();
+    }*/
 }

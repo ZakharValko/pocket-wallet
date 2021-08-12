@@ -6,31 +6,13 @@ import ua.zakharvalko.springbootdemo.dao.OperationTypeRepository;
 import ua.zakharvalko.springbootdemo.domain.OperationType;
 import ua.zakharvalko.springbootdemo.service.OperationTypeService;
 
-import java.util.List;
-
 @Service
-public class OperationTypeServiceImpl implements OperationTypeService{
+public class OperationTypeServiceImpl extends AbstractServiceImpl<OperationType, OperationTypeRepository> implements OperationTypeService {
 
     @Autowired
     private OperationTypeRepository operationTypeRepository;
 
-    @Override
-    public OperationType saveOrUpdate(OperationType type) {
-        return operationTypeRepository.saveAndFlush(type);
-    }
-
-    @Override
-    public void delete(Integer id) {
-        operationTypeRepository.deleteById(id);
-    }
-
-    @Override
-    public OperationType getById(Integer id) {
-        return operationTypeRepository.getById(id);
-    }
-
-    @Override
-    public List<OperationType> getAll() {
-        return operationTypeRepository.findAll();
+    public OperationTypeServiceImpl(OperationTypeRepository repository) {
+        super(repository);
     }
 }

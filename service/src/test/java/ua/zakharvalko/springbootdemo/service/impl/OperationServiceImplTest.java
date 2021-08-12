@@ -1,7 +1,5 @@
 package ua.zakharvalko.springbootdemo.service.impl;
 
-import org.junit.Assert;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,12 +7,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.zakharvalko.springbootdemo.dao.OperationRepository;
-import ua.zakharvalko.springbootdemo.domain.Account;
-import ua.zakharvalko.springbootdemo.domain.Category;
-import ua.zakharvalko.springbootdemo.domain.Currency;
-import ua.zakharvalko.springbootdemo.domain.GroupOfCategories;
-import ua.zakharvalko.springbootdemo.domain.Operation;
-import ua.zakharvalko.springbootdemo.domain.OperationType;
+import ua.zakharvalko.springbootdemo.domain.*;
 import ua.zakharvalko.springbootdemo.domain.specification.OperationFilter;
 import ua.zakharvalko.springbootdemo.domain.specification.OperationSpecifications;
 import ua.zakharvalko.springbootdemo.service.OperationService;
@@ -25,8 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.junit.Assert.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;

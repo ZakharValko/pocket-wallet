@@ -43,6 +43,8 @@ CREATE TABLE IF NOT EXISTS user
     id int NOT NULL AUTO_INCREMENT,
     first_name varchar(20) NOT NULL,
     second_name varchar(20) NOT NULL,
+    username varchar (50) NOT NULL,
+    password varchar (100) NOT NULL,
     role_id int NOT NULL,
     foreign key (role_id) references role (id),
     PRIMARY KEY (id)

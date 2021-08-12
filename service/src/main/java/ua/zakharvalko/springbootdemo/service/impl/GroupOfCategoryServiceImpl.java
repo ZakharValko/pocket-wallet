@@ -6,31 +6,13 @@ import ua.zakharvalko.springbootdemo.dao.GroupOfCategoryRepository;
 import ua.zakharvalko.springbootdemo.domain.GroupOfCategories;
 import ua.zakharvalko.springbootdemo.service.GroupOfCategoryService;
 
-import java.util.List;
-
 @Service
-public class GroupOfCategoryServiceImpl implements GroupOfCategoryService {
+public class GroupOfCategoryServiceImpl extends AbstractServiceImpl<GroupOfCategories, GroupOfCategoryRepository> implements GroupOfCategoryService {
 
     @Autowired
     private GroupOfCategoryRepository groupRepository;
 
-    @Override
-    public GroupOfCategories saveOrUpdate(GroupOfCategories group) {
-        return groupRepository.saveAndFlush(group);
-    }
-
-    @Override
-    public void delete(Integer id) {
-        groupRepository.deleteById(id);
-    }
-
-    @Override
-    public GroupOfCategories getById(Integer id) {
-        return groupRepository.getById(id);
-    }
-
-    @Override
-    public List<GroupOfCategories> getAll() {
-        return groupRepository.findAll();
+    public GroupOfCategoryServiceImpl(GroupOfCategoryRepository repository) {
+        super(repository);
     }
 }

@@ -2,7 +2,6 @@ package ua.zakharvalko.springbootdemo.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
-import org.springframework.lang.Nullable;
 
 import javax.persistence.*;
 import java.util.Date;

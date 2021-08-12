@@ -5,8 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import ua.zakharvalko.springbootdemo.domain.Role;
-import ua.zakharvalko.springbootdemo.domain.Account;
 
 import javax.persistence.*;
 import java.util.List;
@@ -28,6 +26,12 @@ public class User {
 
     @Column
     private String secondName;
+
+    @Column(nullable = false)
+    private String username;
+
+    @Column(nullable = false)
+    private String password;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference(value = "user-account")

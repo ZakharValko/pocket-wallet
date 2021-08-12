@@ -1,14 +1,11 @@
 package ua.zakharvalko.springbootdemo.domain.specification;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import ua.zakharvalko.springbootdemo.domain.Operation;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Getter

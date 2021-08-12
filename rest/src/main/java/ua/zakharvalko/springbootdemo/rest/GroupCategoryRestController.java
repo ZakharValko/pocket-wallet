@@ -72,5 +72,4 @@ public class GroupCategoryRestController {
             return new ResponseEntity<>(groups, HttpStatus.OK);
         }
     }
-
 }
