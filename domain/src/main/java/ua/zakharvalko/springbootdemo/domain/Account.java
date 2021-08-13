@@ -32,7 +32,7 @@ public class Account {
     @JoinColumn(name = "currency_id", referencedColumnName = "id")
     private Currency currency;
 
-    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "account", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonBackReference(value = "account-operation")
     private List<Operation> operations;
 

@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS user
     first_name varchar(20) NOT NULL,
     second_name varchar(20) NOT NULL,
     username varchar (50) NOT NULL,
-    password varchar (100) NOT NULL,
+    password varchar (60) NOT NULL,
     role_id int NOT NULL,
     foreign key (role_id) references role (id),
     PRIMARY KEY (id)

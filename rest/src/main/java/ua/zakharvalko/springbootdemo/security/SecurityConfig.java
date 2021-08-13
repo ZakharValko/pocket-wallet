@@ -46,10 +46,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/operation-types/**").hasAuthority("Admin")
                 .antMatchers("/api/roles/**").hasAuthority("Admin")
                 .anyRequest().authenticated()
-                .and()
+                /*.and()
                 .formLogin().permitAll()
                 .and()
-                .logout().permitAll();
+                .logout().permitAll();*/
+                .and()
+                .httpBasic()
+                .and().cors().and().csrf().disable();
     }
 
     @Bean

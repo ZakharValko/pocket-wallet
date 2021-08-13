@@ -25,10 +25,12 @@ public class OperationRestController {
     private OperationService operationService;
 
     @RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Operation> addOperation(@RequestBody @Validated Operation operation) {
+    public ResponseEntity<Operation> addOperation(@RequestBody @Validated Operation operation, Principal principal) {
         if(operation == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
+            Integer id = operation.getId();
+            checkAuth(principal, id);
             this.operationService.saveOrUpdate(operation);
             return new ResponseEntity<>(operation, HttpStatus.CREATED);
         }
