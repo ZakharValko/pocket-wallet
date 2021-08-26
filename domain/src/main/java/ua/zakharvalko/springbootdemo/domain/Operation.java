@@ -3,11 +3,9 @@ package ua.zakharvalko.springbootdemo.domain;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
-import javax.persistence.*;
+import javax.persistence.Temporal;
 import java.util.Date;
 
-@Entity
-@Table(name = "operation")
 @Getter
 @Setter
 @ToString
@@ -15,49 +13,35 @@ import java.util.Date;
 @Builder
 public class Operation {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column
     private String description;
 
-    @Column
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
-    @Temporal(TemporalType.TIMESTAMP)
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date date;
 
-    @Column
     private Long price;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "account_id", referencedColumnName = "id")
-    private Account account;
+    private Integer account_id;
 
-    @ManyToOne
-    @JoinColumn(name = "operation_type_id", referencedColumnName = "id")
-    private OperationType operationType;
+    private Integer operation_type_id;
 
-    @ManyToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Category category;
+    private Integer category_id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "transfer_to", referencedColumnName = "id")
-    private Account transferTo;
+    private Integer transfer_to;
 
-    @Column(name = "total_for_transfer")
-    private Long totalForTransfer;
+    private Long total_for_transfer;
 
     public Operation() {
     }
 
-    public Operation(Integer id, String description, Date date, Long price, OperationType operationType, Category category) {
+    public Operation(Integer id, String description, Date date, Long price, Integer operationTypeId, Integer categoryId) {
         this.id = id;
         this.description = description;
         this.date = date;
         this.price = price;
-        this.operationType = operationType;
-        this.category = category;
+        this.operation_type_id = operationTypeId;
+        this.category_id = categoryId;
     }
 }

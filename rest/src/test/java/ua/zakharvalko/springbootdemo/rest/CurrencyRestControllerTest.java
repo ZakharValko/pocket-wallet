@@ -36,7 +36,7 @@ class CurrencyRestControllerTest {
     @Test
     void shouldAddCurrency() throws Exception {
         Currency currency = Currency.builder().id(1).build();
-        when(currencyService.saveOrUpdate(currency)).thenReturn(currency);
+        currencyService.save(currency);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/currencies/")
                         .content(asJsonString(currency))
@@ -46,7 +46,7 @@ class CurrencyRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));
 
-        verify(currencyService).saveOrUpdate(any(Currency.class));
+        verify(currencyService).save(any(Currency.class));
         verifyNoMoreInteractions(currencyService);
     }
 
@@ -67,7 +67,7 @@ class CurrencyRestControllerTest {
     void shouldEditCurrency() throws Exception {
         Currency oldCurrency = Currency.builder().id(1).title("USD").build();
         Currency newCurrency = Currency.builder().id(1).title("US Dollars").build();
-        when(currencyService.saveOrUpdate(oldCurrency)).thenReturn(newCurrency);
+        currencyService.update(oldCurrency);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/currencies/")
                 .content(asJsonString(newCurrency))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -76,7 +76,7 @@ class CurrencyRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
 
-        verify(currencyService).saveOrUpdate(any(Currency.class));
+        verify(currencyService).update(any(Currency.class));
         verifyNoMoreInteractions(currencyService);
     }
 

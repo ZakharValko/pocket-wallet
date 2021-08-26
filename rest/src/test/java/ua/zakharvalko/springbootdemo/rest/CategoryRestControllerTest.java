@@ -37,7 +37,7 @@ class CategoryRestControllerTest {
     @Test
     void shouldAddCategory() throws Exception {
         Category category = Category.builder().id(1).build();
-        when(categoryService.saveOrUpdate(category)).thenReturn(category);
+        categoryService.save(category);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/categories/")
                         .content(asJsonString(category))
@@ -47,7 +47,7 @@ class CategoryRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));
 
-        verify(categoryService).saveOrUpdate(any(Category.class));
+        verify(categoryService).save(any(Category.class));
         verifyNoMoreInteractions(categoryService);
 
     }
@@ -69,7 +69,7 @@ class CategoryRestControllerTest {
     void shouldEditCategory() throws Exception {
         Category oldCategory = Category.builder().id(1).title("Old title").build();
         Category newCategory = Category.builder().id(1).title("New title").build();
-        when(categoryService.saveOrUpdate(oldCategory)).thenReturn(newCategory);
+        categoryService.update(oldCategory);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/categories/")
                 .content(asJsonString(newCategory))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -78,7 +78,7 @@ class CategoryRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
 
-        verify(categoryService).saveOrUpdate(any(Category.class));
+        verify(categoryService).save(any(Category.class));
         verifyNoMoreInteractions(categoryService);
     }
 

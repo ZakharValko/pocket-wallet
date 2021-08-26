@@ -37,7 +37,7 @@ class UserRestControllerTest {
     @Test
     void shouldAddUser() throws Exception {
         User user = User.builder().id(1).build();
-        when(userService.saveOrUpdate(user)).thenReturn(user);
+        userService.save(user);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/users/")
                         .content(asJsonString(user))
@@ -47,7 +47,7 @@ class UserRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));
 
-        verify(userService).saveOrUpdate(any(User.class));
+        verify(userService).update(any(User.class));
         verifyNoMoreInteractions(userService);
     }
 
@@ -65,9 +65,9 @@ class UserRestControllerTest {
 
     @Test
     void shouldEditUser() throws Exception {
-        User oldUser = User.builder().id(1).firstName("Alex").build();
-        User newUser = User.builder().id(1).firstName("John").build();
-        when(userService.saveOrUpdate(oldUser)).thenReturn(newUser);
+        User oldUser = User.builder().id(1).first_name("Alex").build();
+        User newUser = User.builder().id(1).first_name("John").build();
+        userService.update(oldUser);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/users/")
                 .content(asJsonString(newUser))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -76,7 +76,7 @@ class UserRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
 
-        verify(userService).saveOrUpdate(any(User.class));
+        verify(userService).update(any(User.class));
         verifyNoMoreInteractions(userService);
     }
 

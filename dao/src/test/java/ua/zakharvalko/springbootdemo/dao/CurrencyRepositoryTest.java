@@ -3,13 +3,12 @@ package ua.zakharvalko.springbootdemo.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.zakharvalko.springbootdemo.domain.Currency;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@MybatisTest
 class CurrencyRepositoryTest {
 
     @Autowired
@@ -28,7 +27,6 @@ class CurrencyRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        List<Currency> currencies = new ArrayList<>();
         Currency first = Currency.builder()
                 .id(1)
                 .title("USD")
@@ -37,17 +35,17 @@ class CurrencyRepositoryTest {
                 .id(2)
                 .title("UAH")
                 .build();
-        currencies.add(first);
-        currencies.add(second);
 
-        currencyRepository.saveAll(currencies);
+        currencyRepository.save(first);
+        currencyRepository.save(second);
     }
 
     @Test
     void shouldSaveCurrency() {
-        Currency saved = currencyRepository.saveAndFlush(Currency.builder().id(3).build());
+        Currency saved = Currency.builder().id(3).build();
+        currencyRepository.save(saved);
         Currency fromDb = currencyRepository.getById(3);
-        assertEquals(saved, fromDb);
+        assertEquals(saved.getId(), fromDb.getId());
     }
 
     @Test
@@ -58,7 +56,7 @@ class CurrencyRepositoryTest {
 
     @Test
     void shouldGetAllCurrencies() {
-        List<Currency> currencies = currencyRepository.findAll();
+        List<Currency> currencies = currencyRepository.getAll();
         assertNotNull(currencies);
         assertThat(currencies).hasSize(2);
     }
@@ -69,15 +67,15 @@ class CurrencyRepositoryTest {
                 .id(1)
                 .title("US DOLLARS")
                 .build();
-        currencyRepository.saveAndFlush(newCurrency);
+        currencyRepository.update(newCurrency);
         Currency editedCurrency = currencyRepository.getById(1);
         assertEquals("US DOLLARS", editedCurrency.getTitle());
     }
 
     @Test
     void shouldDeleteCurrency() {
-        currencyRepository.deleteById(1);
-        List<Currency> currencies = currencyRepository.findAll();
+        currencyRepository.delete(1);
+        List<Currency> currencies = currencyRepository.getAll();
         assertThat(currencies).hasSize(1);
     }
 

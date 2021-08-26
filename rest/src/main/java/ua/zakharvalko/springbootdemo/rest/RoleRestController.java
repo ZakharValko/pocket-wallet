@@ -23,7 +23,7 @@ public class RoleRestController {
         if(role == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.roleService.saveOrUpdate(role);
+            this.roleService.save(role);
             return new ResponseEntity<>(role, HttpStatus.CREATED);
         }
 
@@ -45,7 +45,7 @@ public class RoleRestController {
         if(role == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.roleService.saveOrUpdate(role);
+            this.roleService.update(role);
             return new ResponseEntity<>(role, HttpStatus.OK);
         }
     }

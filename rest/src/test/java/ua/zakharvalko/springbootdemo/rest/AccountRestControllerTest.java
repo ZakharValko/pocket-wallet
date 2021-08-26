@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
+import ua.zakharvalko.springbootdemo.dao.UserRepository;
 import ua.zakharvalko.springbootdemo.domain.Account;
 import ua.zakharvalko.springbootdemo.service.AccountService;
 
@@ -35,20 +36,23 @@ class AccountRestControllerTest {
     @MockBean
     private AccountService accountService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Test
     void shouldAddAccount() throws Exception {
         Account account = Account.builder().id(1).build();
-        when(accountService.saveOrUpdate(account)).thenReturn(account);
+        accountService.save(account);
         mockMvc.perform(
-                MockMvcRequestBuilders.post("/api/accounts/")
-                        .content(asJsonString(account))
-                        .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .accept(MediaType.APPLICATION_JSON_VALUE)
-        )
+                        MockMvcRequestBuilders.post("/api/accounts/")
+                                .content(asJsonString(account))
+                                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                                .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));
 
-        verify(accountService).saveOrUpdate(any(Account.class));
+        verify(accountService).save(any(Account.class));
         verifyNoMoreInteractions(accountService);
     }
 
@@ -70,16 +74,16 @@ class AccountRestControllerTest {
     void shouldEditAccount() throws Exception {
         Account oldAccount = Account.builder().id(1).balance(100L).build();
         Account newAccount = Account.builder().id(1).balance(150L).build();
-        when(accountService.saveOrUpdate(oldAccount)).thenReturn(newAccount);
+        accountService.update(oldAccount);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/accounts/")
-                .content(asJsonString(newAccount))
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .accept(MediaType.APPLICATION_JSON_VALUE)
-        )
+                        .content(asJsonString(newAccount))
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .accept(MediaType.APPLICATION_JSON_VALUE)
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
 
-        verify(accountService).saveOrUpdate(any(Account.class));
+        verify(accountService).update(any(Account.class));
         verifyNoMoreInteractions(accountService);
     }
 
@@ -117,7 +121,7 @@ class AccountRestControllerTest {
         when(accountService.getCurrentBalanceOnDate(any(), any())).thenReturn(balance/100);
 
         mockMvc.perform(get("/api/accounts/get-balance-on-date?id=1")
-                .contentType(MediaType.APPLICATION_JSON))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(String.valueOf(balance/100)));
 

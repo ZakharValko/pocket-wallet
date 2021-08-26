@@ -23,7 +23,7 @@ public class CategoryRestController {
         if(category == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.categoryService.saveOrUpdate(category);
+            this.categoryService.save(category);
             return new ResponseEntity<>(category, HttpStatus.CREATED);
         }
     }
@@ -44,7 +44,7 @@ public class CategoryRestController {
         if(category == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.categoryService.saveOrUpdate(category);
+            this.categoryService.update(category);
             return new ResponseEntity<>(category, HttpStatus.OK);
         }
     }

@@ -7,9 +7,7 @@ import ua.zakharvalko.springbootdemo.dao.AccountRepository;
 import ua.zakharvalko.springbootdemo.dao.OperationRepository;
 import ua.zakharvalko.springbootdemo.domain.Account;
 import ua.zakharvalko.springbootdemo.domain.Operation;
-import ua.zakharvalko.springbootdemo.domain.specification.OperationSpecifications;
-import ua.zakharvalko.springbootdemo.domain.specification.SearchCriteria;
-import ua.zakharvalko.springbootdemo.domain.specification.SearchOperation;
+import ua.zakharvalko.springbootdemo.domain.filter.OperationFilter;
 import ua.zakharvalko.springbootdemo.service.AccountService;
 
 import java.util.Date;
@@ -30,22 +28,22 @@ public class AccountServiceImpl extends AbstractServiceImpl<Account, AccountRepo
     }
 
     @Override
-    public double getCurrentBalanceOnDate(Integer id, Date date) {
+    public double getCurrentBalanceOnDate(Integer id, java.util.Date date) {
         if(date == null) {
             date = new Date();
         }
 
-        OperationSpecifications specifications = new OperationSpecifications();
-        specifications.add(new SearchCriteria("account", id, SearchOperation.EQUAL));
-        specifications.add(new SearchCriteria("date", date, SearchOperation.BEFORE));
+        OperationFilter filter = new OperationFilter();
+        filter.setAccount_id(id);
+        filter.setTo(date);
 
         long balance = accountRepository.getById(id).getBalance();
-        List<Operation> operations = operationRepository.findAll(specifications);
+        List<Operation> operations = operationRepository.getAllByFilter(filter);
 
         for (Operation operation : operations) {
-            Integer operationType = operation.getOperationType().getId();
+            Integer operationType = operation.getOperation_type_id();
             if(operationType.equals(1)){
-                Long price = operation.getTotalForTransfer();
+                Long price = operation.getTotal_for_transfer();
                 balance -= price;
             } else if (operationType.equals(2)) {
                 Long price = operation.getPrice();

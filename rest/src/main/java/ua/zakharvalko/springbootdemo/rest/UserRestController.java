@@ -23,7 +23,7 @@ public class UserRestController {
         if(user == null){
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.userService.saveOrUpdate(user);
+            this.userService.save(user);
             return new ResponseEntity<>(user, HttpStatus.CREATED);
         }
     }
@@ -44,7 +44,7 @@ public class UserRestController {
         if(user == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.userService.saveOrUpdate(user);
+            this.userService.update(user);
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
     }

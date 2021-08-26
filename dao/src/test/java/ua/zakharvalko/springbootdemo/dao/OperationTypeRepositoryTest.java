@@ -3,13 +3,12 @@ package ua.zakharvalko.springbootdemo.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.zakharvalko.springbootdemo.domain.OperationType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@MybatisTest
 class OperationTypeRepositoryTest {
 
     @Autowired
@@ -28,7 +27,6 @@ class OperationTypeRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        List<OperationType> types = new ArrayList<>();
         OperationType first = OperationType.builder()
                 .id(1)
                 .title("Transfer")
@@ -37,17 +35,17 @@ class OperationTypeRepositoryTest {
                 .id(2)
                 .title("Income")
                 .build();
-        types.add(first);
-        types.add(second);
 
-        typeRepository.saveAll(types);
+        typeRepository.save(first);
+        typeRepository.save(second);
     }
 
     @Test
     void shouldSaveType() {
-        OperationType saved = typeRepository.saveAndFlush(OperationType.builder().id(3).build());
+        OperationType saved = OperationType.builder().id(3).build();
+        typeRepository.save(saved);
         OperationType fromDb = typeRepository.getById(3);
-        assertEquals(saved, fromDb);
+        assertEquals(saved.getId(), fromDb.getId());
     }
 
     @Test
@@ -58,7 +56,7 @@ class OperationTypeRepositoryTest {
 
     @Test
     void shouldGetAllTypes() {
-        List<OperationType> types = typeRepository.findAll();
+        List<OperationType> types = typeRepository.getAll();
         assertNotNull(types);
         assertThat(types).hasSize(2);
     }
@@ -69,15 +67,15 @@ class OperationTypeRepositoryTest {
                 .id(1)
                 .title("Transfers")
                 .build();
-        typeRepository.saveAndFlush(newType);
+        typeRepository.update(newType);
         OperationType editedType = typeRepository.getById(1);
         assertEquals("Transfers", editedType.getTitle());
     }
 
     @Test
     void shouldDeleteType() {
-        typeRepository.deleteById(1);
-        List<OperationType> types = typeRepository.findAll();
+        typeRepository.delete(1);
+        List<OperationType> types = typeRepository.getAll();
         assertThat(types).hasSize(1);
     }
 

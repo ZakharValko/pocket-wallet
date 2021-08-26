@@ -10,6 +10,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ua.zakharvalko.springbootdemo.dao.UserRepository;
 import ua.zakharvalko.springbootdemo.domain.Account;
 import ua.zakharvalko.springbootdemo.service.AccountService;
 
@@ -24,12 +25,15 @@ public class AccountRestController {
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @RequestMapping(value = "/", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Account> addAccount(@RequestBody @Validated Account account) {
         if(account == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.accountService.saveOrUpdate(account);
+            this.accountService.save(account);
             return new ResponseEntity<>(account, HttpStatus.CREATED);
         }
     }
@@ -53,7 +57,7 @@ public class AccountRestController {
         } else {
             Integer id = account.getId();
             checkAuth(principal, id);
-            this.accountService.saveOrUpdate(account);
+            this.accountService.update(account);
             return new ResponseEntity<>(account, HttpStatus.OK);
         }
     }
@@ -99,7 +103,7 @@ public class AccountRestController {
     public void checkAuth(Principal principal, Integer id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if(!principal.getName().equals(accountService.getById(id).getUser().getUsername())) {
+        if(!principal.getName().equals(userRepository.getById(accountService.getById(id).getUser_id()).getUsername())) {
             if(auth.getAuthorities().stream().noneMatch(a -> a.getAuthority().equals("Admin"))){
                 throw new SecurityException("Access denied");
             }

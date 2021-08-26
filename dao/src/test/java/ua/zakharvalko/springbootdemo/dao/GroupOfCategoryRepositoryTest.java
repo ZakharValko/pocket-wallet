@@ -3,13 +3,12 @@ package ua.zakharvalko.springbootdemo.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.zakharvalko.springbootdemo.domain.GroupOfCategories;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@MybatisTest
 class GroupOfCategoryRepositoryTest {
 
     @Autowired
@@ -28,7 +27,6 @@ class GroupOfCategoryRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        List<GroupOfCategories> groups = new ArrayList<>();
         GroupOfCategories first = GroupOfCategories.builder()
                 .id(1)
                 .title("Food&Drinks")
@@ -37,17 +35,17 @@ class GroupOfCategoryRepositoryTest {
                 .id(2)
                 .title("Shopping")
                 .build();
-        groups.add(first);
-        groups.add(second);
 
-        groupRepository.saveAll(groups);
+        groupRepository.save(first);
+        groupRepository.save(second);
     }
 
     @Test
     void shouldSaveGroup() {
-        GroupOfCategories saved = groupRepository.saveAndFlush(GroupOfCategories.builder().id(3).build());
+        GroupOfCategories saved = GroupOfCategories.builder().id(3).build();
+        groupRepository.save(saved);
         GroupOfCategories fromDb = groupRepository.getById(3);
-        assertEquals(saved, fromDb);
+        assertEquals(saved.getId(), fromDb.getId());
     }
 
     @Test
@@ -58,7 +56,7 @@ class GroupOfCategoryRepositoryTest {
 
     @Test
     void shouldGetAllGroups() {
-        List<GroupOfCategories> groups = groupRepository.findAll();
+        List<GroupOfCategories> groups = groupRepository.getAll();
         assertNotNull(groups);
         assertThat(groups).hasSize(2);
     }
@@ -69,15 +67,15 @@ class GroupOfCategoryRepositoryTest {
                 .id(1)
                 .title("Food")
                 .build();
-        groupRepository.saveAndFlush(newGroup);
+        groupRepository.update(newGroup);
         GroupOfCategories editedGroup = groupRepository.getById(1);
         assertEquals("Food", editedGroup.getTitle());
     }
 
     @Test
     void shouldDeleteGroup() {
-        groupRepository.deleteById(1);
-        List<GroupOfCategories> groups = groupRepository.findAll();
+        groupRepository.delete(1);
+        List<GroupOfCategories> groups = groupRepository.getAll();
         assertThat(groups).hasSize(1);
     }
 }

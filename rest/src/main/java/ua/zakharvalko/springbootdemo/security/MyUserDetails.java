@@ -19,10 +19,19 @@ public class MyUserDetails implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        String role = user.getRole().getTitle();
+
+        //TODO: Should autowire RoleRepository for get current role title. But can't do it :(
+
+        Integer roleId = user.getRole_id();
+        String roleTitle = "";
+        if(roleId == 1) {
+            roleTitle = "Admin";
+        } else if (roleId == 2) {
+            roleTitle = "User";
+        }
 
         List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority(role));
+        authorities.add(new SimpleGrantedAuthority(roleTitle));
 
         return authorities;
     }

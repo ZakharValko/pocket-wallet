@@ -31,12 +31,12 @@ class CurrencyServiceImplTest {
     public void shouldReturnCurrencyWhenSaved() {
         Currency currency = Currency.builder().id(1).build();
 
-        when(currencyRepository.saveAndFlush(currency)).thenReturn(currency);
+        currencyRepository.save(currency);
+        when(currencyRepository.getById(1)).thenReturn(currency);
+        Currency actual = currencyService.getById(currency.getId());
 
-        Currency added = currencyService.saveOrUpdate(currency);
-
-        assertEquals(currency.getId(), added.getId());
-        verify(currencyRepository).saveAndFlush(currency);
+        assertEquals(currency.getId(), actual.getId());
+        verify(currencyRepository).save(currency);
     }
 
     @Test
@@ -45,19 +45,19 @@ class CurrencyServiceImplTest {
 
         when(currencyRepository.getById(currency.getId())).thenReturn(currency);
         currencyService.delete(currency.getId());
-        verify(currencyRepository).deleteById(currency.getId());
+        verify(currencyRepository).delete(currency.getId());
     }
 
     @Test
     public void shouldReturnAllCurrencies() {
         List<Currency> currencies = new ArrayList<>();
         currencies.add(new Currency());
-        when(currencyRepository.findAll()).thenReturn(currencies);
+        when(currencyRepository.getAll()).thenReturn(currencies);
 
         List<Currency> actual = currencyService.getAll();
 
         assertEquals(currencies, actual);
-        verify(currencyRepository).findAll();
+        verify(currencyRepository).getAll();
     }
 
     @Test

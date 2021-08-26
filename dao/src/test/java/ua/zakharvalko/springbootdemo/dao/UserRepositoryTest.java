@@ -3,13 +3,12 @@ package ua.zakharvalko.springbootdemo.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.zakharvalko.springbootdemo.domain.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@MybatisTest
 class UserRepositoryTest {
 
     @Autowired
@@ -28,26 +27,26 @@ class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        List<User> users = new ArrayList<>();
         User first = User.builder()
                 .id(1)
-                .firstName("Fill")
+                .first_name("Fill")
                 .build();
         User second = User.builder()
                 .id(2)
-                .firstName("Alex")
+                .first_name("Alex")
                 .build();
-        users.add(first);
-        users.add(second);
 
-        userRepository.saveAll(users);
+        userRepository.save(first);
+        userRepository.save(second);
     }
 
     @Test
     void shouldSaveUser() {
-        User saved = userRepository.saveAndFlush(User.builder().id(3).build());
+        User saved = User.builder().id(3).build();
+        userRepository.save(saved);
         User fromDb = userRepository.getById(3);
-        assertEquals(saved, fromDb);
+        assertEquals(saved.getId(), fromDb.getId());
+
     }
 
     @Test
@@ -58,7 +57,7 @@ class UserRepositoryTest {
 
     @Test
     void shouldGetAllUsers() {
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.getAll();
         assertNotNull(users);
         assertThat(users).hasSize(2);
     }
@@ -67,17 +66,17 @@ class UserRepositoryTest {
     void shouldEditUser() {
         User newUser = User.builder()
                 .id(1)
-                .firstName("Filipp")
+                .first_name("Filipp")
                 .build();
-        userRepository.saveAndFlush(newUser);
+        userRepository.update(newUser);
         User editedUser = userRepository.getById(1);
-        assertEquals("Filipp", editedUser.getFirstName());
+        assertEquals("Filipp", editedUser.getFirst_name());
     }
 
     @Test
     void shouldDeleteUser() {
-        userRepository.deleteById(1);
-        List<User> users = userRepository.findAll();
+        userRepository.delete(1);
+        List<User> users = userRepository.getAll();
         assertThat(users).hasSize(1);
     }
 

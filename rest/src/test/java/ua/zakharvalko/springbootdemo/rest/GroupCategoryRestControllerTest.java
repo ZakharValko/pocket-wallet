@@ -37,7 +37,7 @@ class GroupCategoryRestControllerTest {
     @Test
     void shouldAddGroup() throws Exception {
         GroupOfCategories group = GroupOfCategories.builder().id(1).title("Title").build();
-        when(groupService.saveOrUpdate(group)).thenReturn(group);
+        groupService.save(group);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/groups-of-categories/")
                         .content(asJsonString(group))
@@ -47,7 +47,7 @@ class GroupCategoryRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}, {}"));
 
-        verify(groupService).saveOrUpdate(any(GroupOfCategories.class));
+        verify(groupService).save(any(GroupOfCategories.class));
         verifyNoMoreInteractions(groupService);
     }
 
@@ -68,7 +68,7 @@ class GroupCategoryRestControllerTest {
     void shouldEditGroup() throws Exception {
         GroupOfCategories oldGroup = GroupOfCategories.builder().id(1).title("Old").build();
         GroupOfCategories newGroup = GroupOfCategories.builder().id(1).title("New").build();
-        when(groupService.saveOrUpdate(oldGroup)).thenReturn(newGroup);
+        groupService.update(oldGroup);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/groups-of-categories/")
                 .content(asJsonString(newGroup))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -77,7 +77,7 @@ class GroupCategoryRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
 
-        verify(groupService).saveOrUpdate(any(GroupOfCategories.class));
+        verify(groupService).update(any(GroupOfCategories.class));
         verifyNoMoreInteractions(groupService);
     }
 

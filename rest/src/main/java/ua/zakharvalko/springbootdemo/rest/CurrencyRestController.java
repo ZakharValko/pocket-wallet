@@ -23,7 +23,7 @@ public class CurrencyRestController {
         if(currency == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.currencyService.saveOrUpdate(currency);
+            this.currencyService.save(currency);
             return new ResponseEntity<>(currency, HttpStatus.CREATED);
         }
     }
@@ -44,7 +44,7 @@ public class CurrencyRestController {
         if(currency == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.currencyService.saveOrUpdate(currency);
+            this.currencyService.update(currency);
             return new ResponseEntity<>(currency, HttpStatus.OK);
         }
     }

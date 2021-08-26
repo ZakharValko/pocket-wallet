@@ -31,12 +31,12 @@ class UserServiceImplTest {
     public void shouldReturnUserWhenSaved() {
         User user = User.builder().id(1).build();
 
-        when(userRepository.saveAndFlush(user)).thenReturn(user);
+        userRepository.save(user);
+        when(userRepository.getById(1)).thenReturn(user);
+        User actual = userService.getById(user.getId());
 
-        User added = userService.saveOrUpdate(user);
-
-        assertEquals(user.getId(), added.getId());
-        verify(userRepository).saveAndFlush(user);
+        assertEquals(user.getId(), actual.getId());
+        verify(userRepository).save(user);
     }
 
     @Test
@@ -45,20 +45,20 @@ class UserServiceImplTest {
 
         when(userRepository.getById(user.getId())).thenReturn(user);
         userService.delete(user.getId());
-        verify(userRepository).deleteById(user.getId());
+        verify(userRepository).delete(user.getId());
     }
 
     @Test
     public void shouldEditUser() {
         User oldUser = User.builder().id(1).build();
-        oldUser.setFirstName("Old First Name");
+        oldUser.setFirst_name("Old First Name");
         User newUser = User.builder().id(1).build();
-        newUser.setFirstName("New First Name");
+        newUser.setFirst_name("New First Name");
 
         given(userRepository.getById(oldUser.getId())).willReturn(oldUser);
-        userService.saveOrUpdate(newUser);
+        userService.update(newUser);
 
-        verify(userRepository).saveAndFlush(newUser);
+        verify(userRepository).update(newUser);
     }
 
     @Test
@@ -76,11 +76,11 @@ class UserServiceImplTest {
     public void shouldReturnAllUsers() {
         List<User> users = new ArrayList<>();
         users.add(new User());
-        when(userRepository.findAll()).thenReturn(users);
+        when(userRepository.getAll()).thenReturn(users);
 
         List<User> actual = userService.getAll();
 
         assertEquals(users, actual);
-        verify(userRepository).findAll();
+        verify(userRepository).getAll();
     }
 }

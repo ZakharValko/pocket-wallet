@@ -3,13 +3,12 @@ package ua.zakharvalko.springbootdemo.dao;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
+import org.mybatis.spring.boot.test.autoconfigure.MybatisTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.zakharvalko.springbootdemo.domain.Operation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,8 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)
-@DataJpaTest
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
+@MybatisTest
 class OperationRepositoryTest {
 
     @Autowired
@@ -28,7 +27,6 @@ class OperationRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        List<Operation> operations = new ArrayList<>();
         Operation first = Operation.builder()
                 .id(1)
                 .description("First operation")
@@ -37,17 +35,17 @@ class OperationRepositoryTest {
                 .id(2)
                 .description("Second operation")
                 .build();
-        operations.add(first);
-        operations.add(second);
 
-        operationRepository.saveAll(operations);
+        operationRepository.save(first);
+        operationRepository.save(second);
     }
 
     @Test
     void shouldSaveOperation() {
-        Operation saved = operationRepository.saveAndFlush(Operation.builder().id(3).build());
+        Operation saved = Operation.builder().id(3).build();
+        operationRepository.save(saved);
         Operation fromDb = operationRepository.getById(3);
-        assertEquals(saved, fromDb);
+        assertEquals(saved.getId(), fromDb.getId());
     }
 
     @Test
@@ -58,7 +56,7 @@ class OperationRepositoryTest {
 
     @Test
     void shouldGetAllOperations() {
-        List<Operation> operations = operationRepository.findAll();
+        List<Operation> operations = operationRepository.getAll();
         assertNotNull(operations);
         assertThat(operations).hasSize(2);
     }
@@ -69,15 +67,15 @@ class OperationRepositoryTest {
                 .id(1)
                 .description("New description of operation")
                 .build();
-        operationRepository.saveAndFlush(newOperation);
+        operationRepository.update(newOperation);
         Operation editedOperation = operationRepository.getById(1);
         assertEquals("New description of operation", editedOperation.getDescription());
     }
 
     @Test
     void shouldDeleteOperation() {
-        operationRepository.deleteById(1);
-        List<Operation> operations = operationRepository.findAll();
+        operationRepository.delete(1);
+        List<Operation> operations = operationRepository.getAll();
         assertThat(operations).hasSize(1);
     }
 

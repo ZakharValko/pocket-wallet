@@ -23,7 +23,7 @@ public class OperationTypeRestController {
         if(type == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.operationTypeService.saveOrUpdate(type);
+            this.operationTypeService.save(type);
             return new ResponseEntity<>(type, HttpStatus.CREATED);
         }
     }
@@ -44,7 +44,7 @@ public class OperationTypeRestController {
         if(type == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.operationTypeService.saveOrUpdate(type);
+            this.operationTypeService.update(type);
             return new ResponseEntity<>(type, HttpStatus.OK);
         }
     }

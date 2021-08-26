@@ -12,7 +12,7 @@ import ua.zakharvalko.springbootdemo.dao.OperationRepository;
 import ua.zakharvalko.springbootdemo.domain.Account;
 import ua.zakharvalko.springbootdemo.domain.Operation;
 import ua.zakharvalko.springbootdemo.domain.OperationType;
-import ua.zakharvalko.springbootdemo.domain.specification.OperationSpecifications;
+import ua.zakharvalko.springbootdemo.domain.filter.OperationFilter;
 import ua.zakharvalko.springbootdemo.service.AccountService;
 
 import java.text.ParseException;
@@ -44,12 +44,12 @@ class AccountServiceImplTest {
     public void shouldReturnAccountWhenSaved() {
         Account account = Account.builder().id(1).build();
 
-        when(accountRepository.saveAndFlush(account)).thenReturn(account);
+        accountRepository.save(account);
 
-        Account added = accountService.saveOrUpdate(account);
-
-        assertEquals(account.getId(), added.getId());
-        verify(accountRepository).saveAndFlush(account);
+        when(accountRepository.getById(1)).thenReturn(account);
+        Account actual = accountRepository.getById(account.getId());
+        assertEquals(account.getId(), actual.getId());
+        verify(accountRepository).save(account);
     }
 
     @Test
@@ -58,7 +58,7 @@ class AccountServiceImplTest {
 
         when(accountRepository.getById(account.getId())).thenReturn(account);
         accountService.delete(account.getId());
-        verify(accountRepository).deleteById(account.getId());
+        verify(accountRepository).delete(account.getId());
 
     }
 
@@ -70,9 +70,9 @@ class AccountServiceImplTest {
         newAccount.setBalance(100L);
 
         given(accountRepository.getById(oldAccount.getId())).willReturn(oldAccount);
-        accountService.saveOrUpdate(newAccount);
+        accountService.update(newAccount);
 
-        verify(accountRepository).saveAndFlush(newAccount);
+        verify(accountRepository).update(newAccount);
     }
 
     @Test
@@ -90,23 +90,23 @@ class AccountServiceImplTest {
     public void shouldReturnAllAccounts() {
         List<Account> accountsFromMock = new ArrayList<>();
         accountsFromMock.add(new Account());
-        when(accountRepository.findAll()).thenReturn(accountsFromMock);
+        when(accountRepository.getAll()).thenReturn(accountsFromMock);
 
         List<Account> accounts = accountService.getAll();
 
         assertEquals(accounts, accountsFromMock);
-        verify(accountRepository).findAll();
+        verify(accountRepository).getAll();
     }
 
     @Test
     public void shouldReturnCurrentBalanceOnDate() {
         Account account = Account.builder().id(1).balance(1000L).build();
         List<Operation> operations = new ArrayList<>();
-        operations.add(Operation.builder().account(account).operationType(OperationType.builder().id(2).build()).price(1000L).date(parseDate("2021-05-05T13:19:49")).build());
-        operations.add(Operation.builder().account(account).operationType(OperationType.builder().id(3).build()).price(1500L).date(parseDate("2021-05-05T13:19:49")).build());
+        operations.add(Operation.builder().account_id(account.getId()).operation_type_id(2).price(1000L).date(parseDate("2021-05-05T13:19:49")).build());
+        operations.add(Operation.builder().account_id(account.getId()).operation_type_id(3).price(1500L).date(parseDate("2021-05-05T13:19:49")).build());
         account.setOperations(operations);
 
-        when(operationRepository.findAll(ArgumentMatchers.any(OperationSpecifications.class))).thenReturn(operations);
+        when(operationRepository.getAllByFilter(ArgumentMatchers.any(OperationFilter.class))).thenReturn(operations);
         when(accountRepository.getById(1)).thenReturn(account);
 
         double balance = accountService.getCurrentBalanceOnDate(1, new Date());

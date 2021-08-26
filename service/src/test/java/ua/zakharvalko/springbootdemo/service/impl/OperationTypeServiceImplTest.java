@@ -32,12 +32,12 @@ class OperationTypeServiceImplTest {
     void shouldReturnTypeWhenSaved() {
         OperationType type = OperationType.builder().id(1).build();
 
-        when(operationTypeRepository.saveAndFlush(type)).thenReturn(type);
+        operationTypeRepository.save(type);
+        when(operationTypeRepository.getById(1)).thenReturn(type);
+        OperationType actual = operationTypeService.getById(type.getId());
 
-        OperationType added = operationTypeService.saveOrUpdate(type);
-
-        assertEquals(type.getId(), added.getId());
-        verify(operationTypeRepository).saveAndFlush(type);
+        assertEquals(type.getId(), actual.getId());
+        verify(operationTypeRepository).save(type);
     }
 
     @Test
@@ -46,7 +46,7 @@ class OperationTypeServiceImplTest {
 
         when(operationTypeRepository.getById(type.getId())).thenReturn(type);
         operationTypeService.delete(type.getId());
-        verify(operationTypeRepository).deleteById(type.getId());
+        verify(operationTypeRepository).delete(type.getId());
     }
 
     @Test
@@ -57,9 +57,9 @@ class OperationTypeServiceImplTest {
         newType.setTitle("New");
 
         given(operationTypeRepository.getById(oldType.getId())).willReturn(oldType);
-        operationTypeService.saveOrUpdate(newType);
+        operationTypeService.update(newType);
 
-        verify(operationTypeRepository).saveAndFlush(newType);
+        verify(operationTypeRepository).update(newType);
     }
 
     @Test
@@ -77,11 +77,11 @@ class OperationTypeServiceImplTest {
     void shouldReturnAllTypes() {
         List<OperationType> types = new ArrayList<>();
         types.add(new OperationType());
-        when(operationTypeRepository.findAll()).thenReturn(types);
+        when(operationTypeRepository.getAll()).thenReturn(types);
 
         List<OperationType> actual = operationTypeService.getAll();
 
         assertEquals(types, actual);
-        verify(operationTypeRepository).findAll();
+        verify(operationTypeRepository).getAll();
     }
 }

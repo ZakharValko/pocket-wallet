@@ -1,4 +1,4 @@
-package ua.zakharvalko.springbootdemo.domain.specification;
+package ua.zakharvalko.springbootdemo.domain.filter;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;
@@ -20,4 +20,7 @@ public class OperationFilter extends Operation {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     public Date to;
 
+    public Integer group_id;
+
+    public Integer currency_id;
 }

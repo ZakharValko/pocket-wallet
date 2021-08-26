@@ -32,12 +32,12 @@ class CategoryServiceImplTest {
     public void shouldReturnCategoryWhenSaved() {
         Category category = Category.builder().id(1).build();
 
-        when(categoryRepository.saveAndFlush(category)).thenReturn(category);
+        categoryRepository.save(category);
+        when(categoryRepository.getById(1)).thenReturn(category);
+        Category actual = categoryService.getById(category.getId());
 
-        Category added = categoryService.saveOrUpdate(category);
-
-        assertEquals(category.getId(), added.getId());
-        verify(categoryRepository).saveAndFlush(category);
+        assertEquals(category.getId(), actual.getId());
+        verify(categoryRepository).save(category);
     }
 
     @Test
@@ -46,7 +46,7 @@ class CategoryServiceImplTest {
 
         when(categoryRepository.getById(category.getId())).thenReturn(category);
         categoryService.delete(category.getId());
-        verify(categoryRepository).deleteById(category.getId());
+        verify(categoryRepository).delete(category.getId());
     }
 
     @Test
@@ -57,9 +57,9 @@ class CategoryServiceImplTest {
         newCategory.setTitle("New");
 
         given(categoryRepository.getById(oldCategory.getId())).willReturn(oldCategory);
-        categoryService.saveOrUpdate(newCategory);
+        categoryService.update(newCategory);
 
-        verify(categoryRepository).saveAndFlush(newCategory);
+        verify(categoryRepository).update(newCategory);
     }
 
     @Test
@@ -77,11 +77,11 @@ class CategoryServiceImplTest {
     public void shouldReturnAllCategories() {
         List<Category> categories = new ArrayList<>();
         categories.add(new Category());
-        when(categoryRepository.findAll()).thenReturn(categories);
+        when(categoryRepository.getAll()).thenReturn(categories);
 
         List<Category> actual = categoryService.getAll();
 
         assertEquals(categories, actual);
-        verify(categoryRepository).findAll();
+        verify(categoryRepository).getAll();
     }
 }

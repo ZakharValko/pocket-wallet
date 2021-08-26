@@ -8,8 +8,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import ua.zakharvalko.springbootdemo.dao.OperationRepository;
 import ua.zakharvalko.springbootdemo.domain.*;
-import ua.zakharvalko.springbootdemo.domain.specification.OperationFilter;
-import ua.zakharvalko.springbootdemo.domain.specification.OperationSpecifications;
+
+import ua.zakharvalko.springbootdemo.domain.filter.OperationFilter;
 import ua.zakharvalko.springbootdemo.service.OperationService;
 
 import java.text.ParseException;
@@ -40,16 +40,17 @@ class OperationServiceImplTest {
                 .description("description")
                 .date(new Date(5000))
                 .price(200L)
-                .account(Account.builder().id(1).currency(Currency.builder().id(1).build()).build())
-                .operationType(OperationType.builder().id(2).build())
-                .category(Category.builder().id(1).group(GroupOfCategories.builder().id(1).build()).build())
+                .account_id(1)
+                .operation_type_id(1)
+                .category_id(1)
                 .build();
 
-        when(operationRepository.saveAndFlush(operation)).thenReturn(operation);
-        Operation added = operationService.saveOrUpdate(operation);
+        operationRepository.save(operation);
+        when(operationRepository.getById(1)).thenReturn(operation);
+        Operation actual = operationService.getById(operation.getId());
 
-        assertEquals(operation.getId(), added.getId());
-        verify(operationRepository).saveAndFlush(operation);
+        assertEquals(operation.getId(), actual.getId());
+        verify(operationRepository).save(operation);
     }
 
     @Test
@@ -58,7 +59,7 @@ class OperationServiceImplTest {
 
         when(operationRepository.getById(operation.getId())).thenReturn(operation);
         operationService.delete(operation.getId());
-        verify(operationRepository).deleteById(operation.getId());
+        verify(operationRepository).delete(operation.getId());
     }
 
     @Test
@@ -67,9 +68,9 @@ class OperationServiceImplTest {
         Operation newOperation = Operation.builder().id(1).price(150L).build();
 
         given(operationRepository.getById(oldOperation.getId())).willReturn(newOperation);
-        operationService.saveOrUpdate(newOperation);
+        operationService.update(newOperation);
 
-        verify(operationRepository).saveAndFlush(newOperation);
+        verify(operationRepository).update(newOperation);
     }
 
     @Test
@@ -78,9 +79,9 @@ class OperationServiceImplTest {
                 .description("description")
                 .date(new Date(5000))
                 .price(200L)
-                .account(Account.builder().id(1).currency(Currency.builder().id(1).build()).build())
-                .operationType(OperationType.builder().id(1).build())
-                .category(Category.builder().id(1).group(GroupOfCategories.builder().id(1).build()).build())
+                .account_id(1)
+                .operation_type_id(1)
+                .category_id(1)
                 .build();
         when(operationRepository.getById(1)).thenReturn(operation);
 
@@ -94,39 +95,39 @@ class OperationServiceImplTest {
     public void shouldReturnAllOperations() {
         List<Operation> operations = new ArrayList<>();
         operations.add(new Operation());
-        when(operationRepository.findAll()).thenReturn(operations);
+        when(operationRepository.getAll()).thenReturn(operations);
 
         List<Operation> actual = operationService.getAll();
 
         assertEquals(operations, actual);
-        verify(operationRepository).findAll();
+        verify(operationRepository).getAll();
     }
 
     @Test
     public void shouldReturnFilteredOperations() {
         List<Operation> operations = new ArrayList<>();
         operations.add(Operation.builder().id(1)
-                .category(Category.builder().id(2).build())
-                .operationType(OperationType.builder().id(1).build())
+                .category_id(2)
+                .operation_type_id(1)
                 .date(parseDate("2021-05-05T13:19:49"))
-                .account(Account.builder().currency(Currency.builder().id(1).build()).build())
+                .account_id(1)
                 .build());
         operations.add(Operation.builder().id(2)
-                .category(Category.builder().id(1).build())
-                .operationType(OperationType.builder().id(1).build())
+                .category_id(1)
+                .operation_type_id(1)
                 .date(parseDate("2021-05-08T13:19:49"))
-                .account(Account.builder().currency(Currency.builder().id(1).build()).build())
+                .account_id(1)
                 .build());
         operations.add(Operation.builder().id(3)
-                .category(Category.builder().id(1).build())
-                .operationType(OperationType.builder().id(1).build())
+                .category_id(1)
+                .operation_type_id(1)
                 .date(parseDate("2021-05-10T13:19:49"))
-                .account(Account.builder().currency(Currency.builder().id(1).build()).build())
+                .account_id(1)
                 .build());
 
         OperationFilter filter = new OperationFilter();
 
-        when(operationRepository.findAll(any(OperationSpecifications.class))).thenReturn(operations);
+        when(operationRepository.getAllByFilter(any(OperationFilter.class))).thenReturn(operations);
         List<Operation> actual = operationService.getOperationsByFilter(filter);
         assertEquals(operations, actual);
     }
@@ -135,24 +136,24 @@ class OperationServiceImplTest {
     public void shouldReturnExpensesByFilteredOperations() {
         List<Operation> operations = new ArrayList<>();
         operations.add(Operation.builder().id(1)
-                .category(Category.builder().id(2).build())
-                .operationType(OperationType.builder().id(1).build())
-                .totalForTransfer(1000L)
+                .category_id(2)
+                .operation_type_id(1)
+                .total_for_transfer(1000L)
                 .date(parseDate("2021-05-05T13:19:49"))
-                .account(Account.builder().currency(Currency.builder().id(1).build()).build())
+                .account_id(1)
                 .build());
         operations.add(Operation.builder().id(2)
-                .category(Category.builder().id(1).build())
-                .operationType(OperationType.builder().id(1).build())
-                .totalForTransfer(1000L)
+                .category_id(1)
+                .operation_type_id(1)
+                .total_for_transfer(1000L)
                 .date(parseDate("2021-05-08T13:19:49"))
-                .account(Account.builder().currency(Currency.builder().id(1).build()).build())
+                .account_id(1)
                 .build());
 
         OperationFilter filter = new OperationFilter();
-        filter.setOperationType(OperationType.builder().id(1).build());
+        filter.setOperation_type_id(1);
 
-        when(operationRepository.findAll(any(OperationSpecifications.class))).thenReturn(operations);
+        when(operationRepository.getAllByFilter(any(OperationFilter.class))).thenReturn(operations);
         double actual = operationService.getTotalExpensesByFilter(filter);
         assertEquals(20.0, actual);
 
@@ -162,30 +163,29 @@ class OperationServiceImplTest {
     void shouldMakeTransferBetweenAccounts() {
         Operation operation = Operation.builder()
                 .id(1)
-                .totalForTransfer(1000L)
-                .operationType(OperationType.builder().id(1).build())
-                .account(Account.builder().id(1).build())
-                .transferTo(Account.builder().id(2).build())
+                .total_for_transfer(1000L)
+                .operation_type_id(1)
+                .account_id(1)
+                .transfer_to(2)
                 .build();
 
         Operation back = Operation.builder()
-                .description("Transfer from: " + operation.getAccount().getId())
+                .description("Transfer from: " + operation.getAccount_id())
                 .date(new Date())
-                .price(operation.getTotalForTransfer())
-                .account(operation.getTransferTo())
-                .operationType(OperationType.builder().id(2).build())
+                .price(operation.getTotal_for_transfer())
+                .account_id(operation.getTransfer_to())
+                .operation_type_id(2)
                 .build();
 
         List<Operation> operations = new ArrayList<>();
-        when(operationRepository.saveAndFlush(operation)).thenReturn(operation);
-        when(operationRepository.saveAndFlush(back)).thenReturn(back);
+        operationRepository.save(operation);
+        operationRepository.save(back);
         operations.add(operation);
         operations.add(back);
 
         List<Operation> actual = operationService.transferBetweenAccounts(operation);
 
-        assertEquals(operations, actual);
-        verify(operationRepository).saveAndFlush(operation);
+        assertEquals(operations.get(0).getId(), actual.get(0).getId());
     }
 
     public static Date parseDate(String date) {

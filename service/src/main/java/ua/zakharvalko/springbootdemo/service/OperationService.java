@@ -1,7 +1,7 @@
 package ua.zakharvalko.springbootdemo.service;
 
 import ua.zakharvalko.springbootdemo.domain.Operation;
-import ua.zakharvalko.springbootdemo.domain.specification.OperationFilter;
+import ua.zakharvalko.springbootdemo.domain.filter.OperationFilter;
 
 import java.util.List;
 

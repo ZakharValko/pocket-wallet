@@ -23,7 +23,7 @@ public class GroupCategoryRestController {
         if(groupOfCategories == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.groupService.saveOrUpdate(groupOfCategories);
+            this.groupService.save(groupOfCategories);
             return new ResponseEntity<>(groupOfCategories, HttpStatus.CREATED);
         }
     }
@@ -44,7 +44,7 @@ public class GroupCategoryRestController {
         if(group == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         } else {
-            this.groupService.saveOrUpdate(group);
+            this.groupService.update(group);
             return new ResponseEntity<>(group, HttpStatus.OK);
         }
     }

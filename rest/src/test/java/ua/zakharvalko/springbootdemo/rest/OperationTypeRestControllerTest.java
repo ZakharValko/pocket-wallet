@@ -37,7 +37,7 @@ class OperationTypeRestControllerTest {
     @Test
     void shouldAddType() throws Exception {
         OperationType type = OperationType.builder().id(1).build();
-        when(typeService.saveOrUpdate(type)).thenReturn(type);
+        typeService.save(type);
         mockMvc.perform(
                 MockMvcRequestBuilders.post("/api/operation-types/")
                         .content(asJsonString(type))
@@ -47,7 +47,7 @@ class OperationTypeRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));
 
-        verify(typeService).saveOrUpdate(any(OperationType.class));
+        verify(typeService).save(any(OperationType.class));
         verifyNoMoreInteractions(typeService);
     }
 
@@ -68,7 +68,7 @@ class OperationTypeRestControllerTest {
     void shouldEditType() throws Exception {
         OperationType oldType = OperationType.builder().id(1).title("Old").build();
         OperationType newType = OperationType.builder().id(1).title("New").build();
-        when(typeService.saveOrUpdate(oldType)).thenReturn(newType);
+        typeService.update(oldType);
         mockMvc.perform(MockMvcRequestBuilders.put("/api/operation-types/")
                 .content(asJsonString(newType))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -77,7 +77,7 @@ class OperationTypeRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
 
-        verify(typeService).saveOrUpdate(any(OperationType.class));
+        verify(typeService).update(any(OperationType.class));
         verifyNoMoreInteractions(typeService);
     }
 
