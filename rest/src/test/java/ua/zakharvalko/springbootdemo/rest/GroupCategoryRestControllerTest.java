@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
+import ua.zakharvalko.springbootdemo.dao.UserRepository;
 import ua.zakharvalko.springbootdemo.domain.GroupOfCategories;
 import ua.zakharvalko.springbootdemo.service.GroupOfCategoryService;
 
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest({GroupCategoryRestController.class})
 @ContextConfiguration(classes = SpringBootDemoApplication.class)
+@WithMockUser(username = "alexs", password = "123", authorities = "Admin")
 class GroupCategoryRestControllerTest {
 
     @Autowired
@@ -33,6 +36,9 @@ class GroupCategoryRestControllerTest {
 
     @MockBean
     private GroupOfCategoryService groupService;
+
+    @MockBean
+    private UserRepository userRepository;
 
     @Test
     void shouldAddGroup() throws Exception {
@@ -47,7 +53,7 @@ class GroupCategoryRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}, {}"));
 
-        verify(groupService).save(any(GroupOfCategories.class));
+        verify(groupService, times(2)).save(any(GroupOfCategories.class));
         verifyNoMoreInteractions(groupService);
     }
 
@@ -77,7 +83,7 @@ class GroupCategoryRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
 
-        verify(groupService).update(any(GroupOfCategories.class));
+        verify(groupService, times(2)).update(any(GroupOfCategories.class));
         verifyNoMoreInteractions(groupService);
     }
 

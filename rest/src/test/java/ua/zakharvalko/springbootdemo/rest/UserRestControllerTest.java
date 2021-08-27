@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
+import ua.zakharvalko.springbootdemo.dao.UserRepository;
 import ua.zakharvalko.springbootdemo.domain.User;
 import ua.zakharvalko.springbootdemo.service.UserService;
 
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest({UserRestController.class})
 @ContextConfiguration(classes = SpringBootDemoApplication.class)
+@WithMockUser(username = "alexs", password = "123", authorities = "Admin")
 class UserRestControllerTest {
 
     @Autowired
@@ -33,6 +36,9 @@ class UserRestControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private UserRepository userRepository;
 
     @Test
     void shouldAddUser() throws Exception {
@@ -47,7 +53,7 @@ class UserRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));
 
-        verify(userService).update(any(User.class));
+        verify(userService, times(2)).save(any(User.class));
         verifyNoMoreInteractions(userService);
     }
 
@@ -76,7 +82,7 @@ class UserRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
 
-        verify(userService).update(any(User.class));
+        verify(userService, times(2)).update(any(User.class));
         verifyNoMoreInteractions(userService);
     }
 

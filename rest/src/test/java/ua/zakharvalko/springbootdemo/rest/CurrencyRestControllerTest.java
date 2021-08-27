@@ -7,11 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
+import ua.zakharvalko.springbootdemo.dao.UserRepository;
 import ua.zakharvalko.springbootdemo.domain.Currency;
 import ua.zakharvalko.springbootdemo.service.CurrencyService;
 
@@ -25,6 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest({CurrencyRestController.class})
 @ContextConfiguration(classes = SpringBootDemoApplication.class)
+@WithMockUser(username = "alexs", password = "123", authorities = "Admin")
 class CurrencyRestControllerTest {
 
     @Autowired
@@ -32,6 +35,9 @@ class CurrencyRestControllerTest {
 
     @MockBean
     private CurrencyService currencyService;
+
+    @MockBean
+    private UserRepository userRepository;
 
     @Test
     void shouldAddCurrency() throws Exception {
@@ -46,7 +52,7 @@ class CurrencyRestControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(content().json("{}"));
 
-        verify(currencyService).save(any(Currency.class));
+        verify(currencyService, times(2)).save(any(Currency.class));
         verifyNoMoreInteractions(currencyService);
     }
 
@@ -76,7 +82,7 @@ class CurrencyRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}, {}"));
 
-        verify(currencyService).update(any(Currency.class));
+        verify(currencyService, times(2)).update(any(Currency.class));
         verifyNoMoreInteractions(currencyService);
     }
 

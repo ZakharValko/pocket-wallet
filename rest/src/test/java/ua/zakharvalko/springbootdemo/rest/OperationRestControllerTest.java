@@ -7,15 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import ua.zakharvalko.springbootdemo.SpringBootDemoApplication;
-import ua.zakharvalko.springbootdemo.domain.Account;
-import ua.zakharvalko.springbootdemo.domain.Category;
-import ua.zakharvalko.springbootdemo.domain.Operation;
-import ua.zakharvalko.springbootdemo.domain.OperationType;
+import ua.zakharvalko.springbootdemo.dao.AccountRepository;
+import ua.zakharvalko.springbootdemo.dao.UserRepository;
+import ua.zakharvalko.springbootdemo.domain.*;
+import ua.zakharvalko.springbootdemo.domain.filter.OperationFilter;
 import ua.zakharvalko.springbootdemo.service.OperationService;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @WebMvcTest({OperationRestController.class})
 @ContextConfiguration(classes = SpringBootDemoApplication.class)
+@WithMockUser(username = "alexs", password = "123", authorities = "Admin")
 class OperationRestControllerTest {
 
     @Autowired
@@ -40,6 +42,12 @@ class OperationRestControllerTest {
 
     @MockBean
     private OperationService operationService;
+
+    @MockBean
+    private UserRepository userRepository;
+
+    @MockBean
+    private AccountRepository accountRepository;
 
     @Test
     void shouldAddOperation() throws Exception {
@@ -54,6 +62,13 @@ class OperationRestControllerTest {
                 .account_id(1)
                 .build();
 
+        when(operationService.getById(any())).thenReturn(operation);
+
+        Account account = Account.builder().id(1).build();
+        User user = User.builder().username("alexs").build();
+        when(userRepository.getById(any())).thenReturn(user);
+        when(accountRepository.getById(any())).thenReturn(account);
+
         operationService.save(any(Operation.class));
 
         mockMvc.perform(
@@ -66,20 +81,24 @@ class OperationRestControllerTest {
                 .andExpect(content().json("{}"));
 
         verify(operationService).save(any(Operation.class));
-        verifyNoMoreInteractions(operationService);
     }
 
     @Test
     void shouldDeleteOperation() throws Exception {
         Operation operation = Operation.builder().id(1).build();
 
-        when(operationService.getById(1)).thenReturn(operation);
+        when(operationService.getById(any())).thenReturn(operation);
+
+        Account account = Account.builder().id(1).build();
+        User user = User.builder().username("alexs").build();
+        when(userRepository.getById(any())).thenReturn(user);
+        when(accountRepository.getById(any())).thenReturn(account);
 
         mockMvc.perform( MockMvcRequestBuilders.delete("/api/operations/{id}", 1) )
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
 
-        verify(operationService).getById(1);
+        verify(operationService, times(2)).getById(1);
         verify(operationService).delete(1);
         verifyNoMoreInteractions(operationService);
     }
@@ -91,6 +110,13 @@ class OperationRestControllerTest {
 
         operationService.update(oldOperation);
 
+        when(operationService.getById(any())).thenReturn(oldOperation);
+
+        Account account = Account.builder().id(1).build();
+        User user = User.builder().username("alexs").build();
+        when(userRepository.getById(any())).thenReturn(user);
+        when(accountRepository.getById(any())).thenReturn(account);
+
         mockMvc.perform(MockMvcRequestBuilders.put("/api/operations/")
                 .content(asJsonString(newOperation))
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
@@ -99,21 +125,25 @@ class OperationRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
 
-        verify(operationService).update(any());
-        verifyNoMoreInteractions(operationService);
+        verify(operationService, times(2)).update(any());
     }
 
     @Test
     void shouldReturnOperationById() throws Exception {
         Operation operation = Operation.builder().id(1).build();
 
-        when(operationService.getById(1)).thenReturn(operation);
+        when(operationService.getById(any())).thenReturn(operation);
+
+        Account account = Account.builder().id(1).build();
+        User user = User.builder().username("alexs").build();
+        when(userRepository.getById(any())).thenReturn(user);
+        when(accountRepository.getById(any())).thenReturn(account);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/api/operations/{id}", 1))
                 .andExpect(status().isOk())
                 .andExpect(content().json("{}"));
 
-        verify(operationService).getById(1);
+        verify(operationService, times(2)).getById(1);
         verifyNoMoreInteractions(operationService);
     }
 
@@ -137,7 +167,7 @@ class OperationRestControllerTest {
 
     }
 
-    /*@Test
+    @Test
     void shouldReturnOperationsByFilter() throws Exception {
         List<Operation> operationsList = new ArrayList<>();
         operationsList.add(
@@ -146,9 +176,9 @@ class OperationRestControllerTest {
                         .description("Test operation")
                         .date(new Date())
                         .price(1000L)
-                        .operationType(OperationType.builder().id(1).build())
-                        .category(Category.builder().id(1).build())
-                        .account(Account.builder().id(1).build())
+                        .operation_type_id(1)
+                        .category_id(1)
+                        .account_id(1)
                         .build());
         operationsList.add(
                 Operation.builder()
@@ -156,13 +186,20 @@ class OperationRestControllerTest {
                         .description("Test operation 2")
                         .date(new Date())
                         .price(1500L)
-                        .operationType(OperationType.builder().id(2).build())
-                        .category(Category.builder().id(1).build())
-                        .account(Account.builder().id(1).build())
+                        .operation_type_id(2)
+                        .category_id(1)
+                        .account_id(1)
                         .build());
 
         OperationFilter filter = new OperationFilter();
-        filter.setAccount(Account.builder().id(1).build());
+        filter.setAccount_id(1);
+
+        when(operationService.getById(any())).thenReturn(Operation.builder().id(1).build());
+
+        Account account = Account.builder().id(1).build();
+        User user = User.builder().username("alexs").build();
+        when(userRepository.getById(any())).thenReturn(user);
+        when(accountRepository.getById(any())).thenReturn(account);
 
         when(operationService.getOperationsByFilter(any())).thenReturn(operationsList);
 
@@ -173,13 +210,22 @@ class OperationRestControllerTest {
                 .andExpect(content().json("[{}, {}]"));
 
         verify(operationService).getOperationsByFilter(any());
-        verifyNoMoreInteractions(operationService);
     }
 
     @Test
     void shouldReturnTotalExpensesByFilter() throws Exception {
         OperationFilter filter = new OperationFilter();
-        filter.setAccount(Account.builder().id(1).build());
+        filter.setAccount_id(1);
+
+        List<Operation> operations = new ArrayList<>();
+        operations.add(Operation.builder().id(1).build());
+
+        when(operationService.getById(any())).thenReturn(Operation.builder().id(1).build());
+
+        Account account = Account.builder().id(1).operations(operations).build();
+        User user = User.builder().username("alexs").build();
+        when(userRepository.getById(any())).thenReturn(user);
+        when(accountRepository.getById(any())).thenReturn(account);
 
         when(operationService.getTotalExpensesByFilter(any())).thenReturn(100.35);
         mockMvc.perform(post("/api/operations/get-total-by-filter")
@@ -189,7 +235,6 @@ class OperationRestControllerTest {
                 .andExpect(content().string("100.35"));
 
         verify(operationService).getTotalExpensesByFilter(any());
-        verifyNoMoreInteractions(operationService);
     }
 
     @Test
@@ -197,22 +242,28 @@ class OperationRestControllerTest {
         List<Operation> operations = new ArrayList<>();
         Operation operation = Operation.builder()
                 .id(1)
-                .account(Account.builder().id(1).build())
-                .operationType(OperationType.builder().id(1).build())
-                .transferTo(Account.builder().id(2).build())
-                .totalForTransfer(1000L)
+                .account_id(1)
+                .operation_type_id(1)
+                .transfer_to(2)
+                .total_for_transfer(1000L)
                 .build();
 
         Operation back = Operation.builder()
-                .description("Transfer from: " + operation.getAccount().getId())
+                .description("Transfer from: " + operation.getAccount_id())
                 .date(new Date())
                 .price(operation.getTotal_for_transfer())
-                .account(operation.getTransfer_to())
-                .operationType(OperationType.builder().id(2).build())
+                .account_id(operation.getTransfer_to())
+                .operation_type_id(2)
                 .build();
 
         operations.add(operation);
         operations.add(back);
+
+        Account account = Account.builder().id(1).build();
+        User user = User.builder().username("alexs").build();
+        when(userRepository.getById(any())).thenReturn(user);
+        when(accountRepository.getById(any())).thenReturn(account);
+        when(operationService.getById(any())).thenReturn(operation);
 
         when(operationService.transferBetweenAccounts(any())).thenReturn(operations);
 
@@ -223,8 +274,7 @@ class OperationRestControllerTest {
                 .andExpect(content().json("[{}, {}]"));
 
         verify(operationService).transferBetweenAccounts(any());
-        verifyNoMoreInteractions(operationService);
-    }*/
+    }
 
     public static String asJsonString(final Object obj) {
         try {

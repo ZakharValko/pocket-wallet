@@ -123,7 +123,7 @@ public class OperationRestController {
         }
     }
 
-    /*@RequestMapping(value = "/transfer-btw-accounts", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "/transfer-btw-accounts", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<Operation>> transferBetweenAccounts(@RequestBody Operation operation, Principal principal) {
         if(operation == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -133,7 +133,7 @@ public class OperationRestController {
             List<Operation> operations = operationService.transferBetweenAccounts(operation);
             return new ResponseEntity<>(operations, HttpStatus.OK);
         }
-    }*/
+    }
 
     public void checkAuth(Principal principal, Integer id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
